@@ -9,13 +9,13 @@ import { Report } from './report';
 export class ReportService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private reportUrl = 'http://localhost:50169/api/Report';  // URL to web api
+  private reportUrl = 'http://trafficreporter.azurewebsites.net/api/Report';  // URL to web api
 
   constructor(private http: Http) { }
 
   // request all reports in area defined by map bounds
   getReports( latMin: number,longMin: number,latMax: number, longMax: number, cause: number): Promise<Report[]> {
-    return this.http.get(this.reportUrl+"?dx="+latMin+"&dy="+longMin+"&ux="+latMax+"&uy="+longMax+"&cause="+cause+"&pageSize=50")
+    return this.http.get(this.reportUrl+"?dx="+latMin+"&dy="+longMin+"&ux="+latMax+"&uy="+longMax+"&cause="+cause+"&pageSize=250")
                .toPromise()
                .then(response => response.json() as Report[])
                .catch(this.handleError);

@@ -32,6 +32,7 @@ import { Cause } from './causes';
         j+=Number(this.elementRef.nativeElement.children[0].children[i].children[0].value);   
     this.communicationService.setFilter(j);
     this.communicationService.menuStateHidden=true;
+    this.communicationService.activate(true);
   }
 
   }

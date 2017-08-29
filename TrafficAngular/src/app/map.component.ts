@@ -82,7 +82,7 @@ initMap(position):void {
       
         this.marker =new Markers(this.causes);
 
-        this.map.addListener('bounds_changed', function() {  // usmjerava searchbox da nudi lokacije bliže onima koje gledamo na mapi
+        this.map.addListener('idle', function() {  // usmjerava searchbox da nudi lokacije bliže onima koje gledamo na mapi
           let bounds = selfRef.map.getBounds();
         //  selfRef.search.setBounds(bounds);
  
