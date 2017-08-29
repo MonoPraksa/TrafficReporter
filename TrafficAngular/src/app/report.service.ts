@@ -4,12 +4,13 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { Report } from './report';
+import { WebApi } from './api.service';
 
 @Injectable()
 export class ReportService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private reportUrl = 'http://trafficreporter.azurewebsites.net/api/Report';  // URL to web api
+  private reportUrl = WebApi.API_ENDPOINT+'Report';  // URL to web api
 
   constructor(private http: Http) { }
 

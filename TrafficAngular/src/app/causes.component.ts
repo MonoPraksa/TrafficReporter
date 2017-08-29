@@ -16,7 +16,6 @@ import { Cause } from './causes';
 })
 
 export class CausesComponent{
-causes: Cause[];
 currentCause;
 
 constructor(
@@ -24,10 +23,6 @@ constructor(
       private communicationService: CommunicationService,
       private causesService: CausesService, 
     ) {
-      this.causesService.getCauses()
-      .then(data =>{   
-        this.causes = data;
-      });
   }
 
 onSelect(cause: number){

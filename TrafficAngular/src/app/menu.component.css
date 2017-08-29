@@ -4,7 +4,8 @@ input{
 button{
     float: right;
 }
-div{
-    background: rgba(127,127,127,0.2);
-    padding: 20px 10px;
+
+label{
+    text-shadow:  1px 1px #FFFFFF;
+    display: block;
 }

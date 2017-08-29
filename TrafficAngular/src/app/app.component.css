@@ -8,6 +8,7 @@ causes{
 }
 
 map, causes, direction, menu{
+    padding: 0;
     position: absolute;
     margin: 0px;
     width: 100%;    
@@ -15,8 +16,9 @@ map, causes, direction, menu{
 
 direction, menu{
     top: 0px;
-    left: 30%;   
+    left: 25%;   
     width: 50%;
+    background: rgba(127,127,127,0.4);
 }
 
 causes{

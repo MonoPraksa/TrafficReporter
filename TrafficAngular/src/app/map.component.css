@@ -25,8 +25,9 @@ img{
     width: 50px;
     position: absolute;
     top: 0px;
-
-    background: rgba(127,127,127,0.2)
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(127,127,127,0.4)
 }
 
 #direction{

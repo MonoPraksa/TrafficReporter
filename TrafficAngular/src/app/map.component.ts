@@ -8,8 +8,6 @@ import { CausesService } from './causes.service';
 import { Report } from './report';
 import { Markers } from './marker';
 
-import { Cause } from './causes';
-
  
 @Component({
   selector: 'map',
@@ -23,7 +21,6 @@ export class MapComponent implements OnInit {
   lng: number;        //  <-+ trenutne kordinate
   marker: Markers;    //  
   tracker: any;
-  causes: Cause[];    //  lista mogućih nesreća
  public map:any;            //  za dohvaćanje google map instance
  public directionsDisplay: any;   // za prikazivanje rute
  public search: any;        //  za dohvaćanje google searchbox instance
@@ -51,11 +48,6 @@ export class MapComponent implements OnInit {
       }
     );
 
-    this.causesService.getCauses()
-    .then(data =>{   
-      this.causes = data;
-    }
-  );
 }
 
 
@@ -76,11 +68,9 @@ initMap(position):void {
         this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.elementRef.nativeElement.children[1]); */
         
         this.directionsDisplay = new google.maps.DirectionsRenderer();
-
         this.directionsDisplay.setMap(this.map);
 
-      
-        this.marker =new Markers(this.causes);
+        this.marker = new Markers(this.causesService);
 
         this.map.addListener('idle', function() {  // usmjerava searchbox da nudi lokacije bliže onima koje gledamo na mapi
           let bounds = selfRef.map.getBounds();

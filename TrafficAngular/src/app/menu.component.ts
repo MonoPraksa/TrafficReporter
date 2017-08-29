@@ -12,27 +12,22 @@ import { Cause } from './causes';
     styleUrls: ['./menu.component.css']
   })
 
-  export class MenuComponent{
+  export class MenuComponent{   // menu component shows available filters
 
-    causes:Cause[]; 
+    constructor(private elementRef: ElementRef,
+                private causesService: CausesService,
+                private communicationService: CommunicationService
+                ) { }
 
-    constructor(private causesService: CausesService, private elementRef: ElementRef,
-      private communicationService: CommunicationService) {
-        this.causesService.getCauses().then(data => {
-          this.causes = data
-          console.log(this.causes);}
-        );
-        
-       }
 
-  apply(){
-    let j=0;
-    for(let i=0; i+1<this.elementRef.nativeElement.children[0].children.length;i++)
-      if(this.elementRef.nativeElement.children[0].children[i].children[0].checked)
-        j+=Number(this.elementRef.nativeElement.children[0].children[i].children[0].value);   
-    this.communicationService.setFilter(j);
-    this.communicationService.menuStateHidden=true;
-    this.communicationService.activate(true);
+  apply(){          // function that applies filters
+    let filter=0;
+    for(let i=0; i+1<this.elementRef.nativeElement.children[0].children.length;i++) // go trough all except last element (it is a button)
+      if(this.elementRef.nativeElement.children[0].children[i].children[0].checked) // if input is checked
+        filter+=Number(this.elementRef.nativeElement.children[0].children[i].children[0].value);   // add his value filter
+    this.communicationService.setFilter(filter);                                    
+    this.communicationService.menuStateHidden=true;                                 // hide the menu
+    this.communicationService.activate(true);                                       // refresh markers on map
   }
 
   }

@@ -2,7 +2,7 @@ import { Injectable }    from '@angular/core';
 import { Subject }    from 'rxjs/Subject';
 
 @Injectable()
-export class CommunicationService {
+export class CommunicationService {          // the point of communication service is to facilitate data transfer between independent components
 
   private activator = new Subject<boolean>(); 
   activator$ = this.activator.asObservable();
