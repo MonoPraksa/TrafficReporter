@@ -13,13 +13,14 @@ using TrafficReporter.Common.Enums;
 
 //using System.Web.Mvc;
 using System.Web.Http;
+using System.Web.Mvc;
 using TrafficReporter.Common.Filter;
 using TrafficReporter.WebAPI.ViewModels;
 
 
 namespace TrafficReporter.WebAPI.Controllers
 {
-    [RoutePrefix("api/report")]
+    [System.Web.Http.RoutePrefix("api/report")]
     public class ReportController : ApiController
     {
         private readonly IReportService _reportService;
@@ -40,7 +41,8 @@ namespace TrafficReporter.WebAPI.Controllers
         /// </summary>
         /// <param name="report">The report.</param>
         /// <returns>Success of this operation</returns>
-        [HttpPost]
+        [System.Web.Http.HttpPost]
+        [RequireHttps]
         public async Task<Inserted> AddReportAsync(ReportViewModel report)
         {
             return await _reportService.AddReportAsync(_mapper.Map<IReport>(report));
@@ -53,8 +55,9 @@ namespace TrafficReporter.WebAPI.Controllers
         /// <param name="id">The identifier.</param>
         /// <returns>Returns number of reports removed.</returns>
         ///todo remove this method because we dont want users to remove reports
-        [HttpDelete]
-        [Route("{id:guid}")]
+        [System.Web.Http.HttpDelete]
+        [System.Web.Http.Route("{id:guid}")]
+        [RequireHttps]
         public async Task<int> RemoveReportAsync(Guid id)
         {
             return await this._reportService.RemoveReportAsync(id);
@@ -66,8 +69,9 @@ namespace TrafficReporter.WebAPI.Controllers
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Report with given identifier.</returns>
-        [HttpGet]
-        [Route("{id:guid}")]
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route("{id:guid}")]
+        [RequireHttps]
         public async Task<IReport> GetReportAsync(Guid id)
         {
             return await this._reportService.GetReportAsync(id);
@@ -88,8 +92,9 @@ namespace TrafficReporter.WebAPI.Controllers
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <returns>Reports that pass the filter</returns>
-        [HttpGet]
-           public async Task<IEnumerable<IReport>> GetFilteredReportsAsync(double dx, double dy, double ux, double uy,
+        [System.Web.Http.HttpGet]
+        [RequireHttps]
+        public async Task<IEnumerable<IReport>> GetFilteredReportsAsync(double dx, double dy, double ux, double uy,
             int cause, int pageNumber = 1, int pageSize = 10)
         {
 

@@ -5,13 +5,14 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Mvc;
 using TrafficReporter.Model.Common;
 using TrafficReporter.Service;
 using TrafficReporter.Service.Common;
 
 namespace TrafficReporter.WebAPI.Controllers
 {
-    [RoutePrefix("api/causes")]
+    [System.Web.Http.RoutePrefix("api/causes")]
     public class CausesController : ApiController
     {
         private readonly ICauseService _causeService;
@@ -26,7 +27,8 @@ namespace TrafficReporter.WebAPI.Controllers
         /// for angular app startup.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [System.Web.Http.HttpGet]
+        [RequireHttps]
         public Task<IEnumerable<ICause>> GetCauses()
         {
             return _causeService.GetCausesAsync();
