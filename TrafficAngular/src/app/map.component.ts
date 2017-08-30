@@ -52,6 +52,8 @@ export class MapComponent implements OnInit {
 
 
 initMap(position):void {
+  console.log("Position");
+  console.log(position);
   let selfRef = this;     
   
         this.lat = position.coords.latitude;
@@ -141,17 +143,6 @@ trackingToggle(){
     clearInterval(this.tracker); this.tracker=undefined;
   }
 }
-/*
-activateStandingMode(){
-
-  if(this.buttontext == "Stationary mode"){
-    this.buttontext = "Running mode";
-    
-  }
-  else
-    this.buttontext = "Stationary mode";
-}
-*/
 
 directionToggle(){
   this.communicationService.directionsStateHidden=!this.communicationService.directionsStateHidden;
@@ -175,8 +166,14 @@ updateReports(selfRef: any):void{
 }
 
     ngOnInit(): void {
-        if(navigator.geolocation){
+        if(!navigator.geolocation){
             navigator.geolocation.getCurrentPosition(this.initMap.bind(this));
+        }
+        else{
+          let position = {coords:{latitude:46, longitude: 16}};
+          console.log(navigator);
+          console.log(position);
+          this.initMap.bind(position);
         }
          // console.log(this.elementRef);
   }

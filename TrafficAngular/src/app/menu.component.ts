@@ -24,7 +24,7 @@ import { Cause } from './causes';
     let filter=0;
     for(let i=0; i+1<this.elementRef.nativeElement.children[0].children.length;i++) // go trough all except last element (it is a button)
       if(this.elementRef.nativeElement.children[0].children[i].children[0].checked) // if input is checked
-        filter+=Number(this.elementRef.nativeElement.children[0].children[i].children[0].value);   // add his value filter
+        filter+=Number(this.elementRef.nativeElement.children[0].children[i].children[0].value);   // add his value filter  
     this.communicationService.setFilter(filter);                                    
     this.communicationService.menuStateHidden=true;                                 // hide the menu
     this.communicationService.activate(true);                                       // refresh markers on map

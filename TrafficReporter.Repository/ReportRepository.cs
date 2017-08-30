@@ -217,7 +217,7 @@ namespace TrafficReporter.Repository
                         commandText.Append($"longitude BETWEEN {filter.LowerLeftX} AND {filter.UpperRightX} AND ");
                         commandText.Append($"lattitude BETWEEN {filter.LowerLeftY} AND {filter.UpperRightY}");
 
-                        commandText.Append($"");
+                        commandText.Append($"ORDER BY rating ");
 
                         commandText.Append($"LIMIT {filter.PageSize}");
 
