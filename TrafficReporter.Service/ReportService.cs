@@ -10,12 +10,12 @@ using TrafficReporter.Common.Filter;
 using TrafficReporter.Common.Enums;
 
 
+
 namespace TrafficReporter.Service
 {
     public class ReportService : IReportService
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
-    (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
 
         #region Constructors
 
@@ -57,7 +57,7 @@ namespace TrafficReporter.Service
         /// </returns>
         public async Task<Inserted> AddReportAsync(IReport report)
         {
-            log.Info("Info logging");
+            
             report.Id = Guid.NewGuid();
             if (await Repository.AddReportAsync(report) != 1)
                 return Inserted.Updated;
@@ -74,7 +74,7 @@ namespace TrafficReporter.Service
         /// </returns>
         public Task<IReport> GetReportAsync(Guid id)
         {
-            log.Info("Info logging");
+           
             return Repository.GetReportAsync(id);
         }
 
@@ -88,7 +88,7 @@ namespace TrafficReporter.Service
         /// </returns>
         public Task<int> RemoveReportAsync(Guid id)
         {
-            log.Info("Info logging");
+            
             return Repository.RemoveReportAsync(id);
         }
 
@@ -102,7 +102,7 @@ namespace TrafficReporter.Service
         /// <returns></returns>
         public Task<IEnumerable<IReport>> GetFilteredReportsAsync(IFilter filter=null)
         {
-            log.Info("Info logging");
+            
             return Repository.GetFilteredReportsAsync(filter);
         }
 

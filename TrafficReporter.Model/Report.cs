@@ -6,11 +6,7 @@ namespace TrafficReporter.Model
 {
     public class Report : IReport
     {
-        /// <summary>
-        /// The log
-        /// </summary>
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
-    (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
 
 
 

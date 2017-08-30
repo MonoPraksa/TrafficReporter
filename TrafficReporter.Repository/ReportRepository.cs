@@ -22,8 +22,7 @@ namespace TrafficReporter.Repository
     /// </summary>
     public class ReportRepository : IReportRepository
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
-    (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
         #region Constructors
 
         public ReportRepository()

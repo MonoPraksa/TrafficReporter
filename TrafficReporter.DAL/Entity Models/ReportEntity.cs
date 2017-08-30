@@ -11,8 +11,7 @@ namespace TrafficReporter.DAL.Entity_Models
 {
     public class ReportEntity
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
-    (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+       
 
         /// <summary>
         /// Unique identifier which differs one report to another.

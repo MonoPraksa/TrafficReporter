@@ -28,7 +28,6 @@ namespace TrafficReporter.WebAPI.ViewModels
         //todo make DateCreated to pass like UTC time.
         public DateTime DateCreated { get; set; }
 
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
-    (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
     }
 }
