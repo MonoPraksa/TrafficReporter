@@ -35,6 +35,10 @@ namespace TrafficReporter.WebAPI.Controllers
 
         public ActionResult Index(ReportViewModel viewModel = null)
         {
+            _log.Info("App started");
+            _log.Debug("Debug message");
+            
+            
 
             ViewBag.Title = "Home Page";
 
@@ -61,7 +65,8 @@ namespace TrafficReporter.WebAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                _log.Info("App started");
+
+                _log.Info("Report added");
                 //await _reportService.AddReportAsync(_mapper.Map<ReportViewModel, IReport>(viewModel));
                 return Index(null);
             }
@@ -76,3 +81,4 @@ namespace TrafficReporter.WebAPI.Controllers
 
     }
 }
+
