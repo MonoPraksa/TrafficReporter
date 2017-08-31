@@ -5,6 +5,7 @@ using TrafficReporter.Repository.Common;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ using TrafficReporter.Common;
 using TrafficReporter.Common.Enums;
 using TrafficReporter.Common.Filter;
 using TrafficReporter.DAL.Entity_Models;
-using log4net;
 
 namespace TrafficReporter.Repository
 {
@@ -23,12 +23,19 @@ namespace TrafficReporter.Repository
     /// </summary>
     public class ReportRepository : IReportRepository
     {
-        private static readonly ILog _log = LogManager.GetLogger(typeof(ReportRepository));
+        private readonly string _connectionString;
 
         #region Constructors
 
-        public ReportRepository()
+
+        /// <summary>
+        /// Connection string is now injected trough ninject module.
+        /// <see cref="DIModule"/>
+        /// </summary>
+        /// <param name="connectionString">To be injected</param>
+        public ReportRepository(string connectionString)
         {
+            _connectionString = connectionString;
         }
 
         #endregion Constructors
@@ -46,29 +53,15 @@ namespace TrafficReporter.Repository
         {
             var rowsAffrected = 0;
 
-            
 
-            using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
-                .ConnectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-<<<<<<< HEAD
-                //This method should add only if other report in range and with same
-                //cause doesn't exist.
-                var reportInRangeId = await CheckIfOtherReportInRangeAsync(report, connection);
-                if (!reportInRangeId.Equals(Guid.Empty))
-                {
-                    int rowsAffected = await UpdateTimeAndRatingAsync(reportInRangeId, report.Cause, connection);
-                    connection.Close();
-                    return (int)Inserted.Updated;
-                }
-=======
                 
->>>>>>> hotfix/RepoAndServiceOptimization
 
                 #region AddReport
-                
+
                 using (var command = new NpgsqlCommand())
                 {
                     command.Connection = connection;
@@ -77,39 +70,29 @@ namespace TrafficReporter.Repository
                         "VALUES (@id, @cause, @direction, @longitude, @lattitude, @date_created)";
                     command.Parameters.AddWithValue("id", report.Id);
                     command.Parameters.AddWithValue("cause", report.Cause);
-                    command.Parameters.AddWithValue("direction", (int)report.Direction);
+                    command.Parameters.AddWithValue("direction", (int) report.Direction);
                     command.Parameters.AddWithValue("longitude", report.Longitude);
                     command.Parameters.AddWithValue("lattitude", report.Lattitude);
                     //todo do not use datetime.now here, get time from frontend
                     command.Parameters.AddWithValue("date_created", report.DateCreated);
                     rowsAffrected = await command.ExecuteNonQueryAsync();
                 }
-<<<<<<< HEAD
-                await UpdateTimeAndRatingAsync(report.Id, report.Cause, connection);
-=======
                 await UpdateTimeAndRatingAsync(report.Id, report.Cause);
 
->>>>>>> hotfix/RepoAndServiceOptimization
                 #endregion AddReport
+
                 connection.Close();
             }
 
-            return (int)Inserted.Added;
+            return (int) Inserted.Added;
         }
 
         public async Task<int> UpdateTimeAndRatingAsync(Guid reportInRangeId, int cause)
         {
             int rowsAffected = 0;
 
-<<<<<<< HEAD
-            using (var command = new NpgsqlCommand($"UPDATE trafreport SET time_remaining = (SELECT time_remaining FROM cause_table WHERE id = {cause}), rating = rating + 1 " +
-                                                   $"WHERE id = '{reportInRangeId}'", connection))
-=======
             using (var connection = new NpgsqlConnection(_connectionString))
->>>>>>> hotfix/RepoAndServiceOptimization
             {
-                await connection.OpenAsync();
-
                 using (var command = new NpgsqlCommand(
                         $"UPDATE trafreport SET time_remaining = (SELECT time_remaining FROM cause_table WHERE id = {cause}), rating = rating + 1 " +
                         $"WHERE id = '{reportInRangeId}'", connection))
@@ -119,50 +102,30 @@ namespace TrafficReporter.Repository
                 
                 connection.Close(); 
             }
-            _log.Info("Updated");
+
             return rowsAffected;
         }
-
+        
         public async Task<Guid> CheckIfOtherReportInRangeAsync(IReport report)
         {
             Guid returnValue = Guid.Empty;
 
-<<<<<<< HEAD
-            using (var command =
-                new NpgsqlCommand(
-                    $"SELECT id FROM (SELECT id FROM trafreport WHERE cause = {report.Cause} AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude) < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id",
-                    connection))
-            {
-                _log.Info("Check if in range...");
-                using (var reader = await command.ExecuteReaderAsync())
-=======
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
                 using (var command =
-                       new NpgsqlCommand(
-                           $"SELECT id\r\n" +
-                           $"FROM (SELECT id FROM trafreport\r\n" +
-                           $" WHERE cause = {report.Cause}" +
-                           $" AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id\r\n",
-                           connection))
->>>>>>> hotfix/RepoAndServiceOptimization
+                        new NpgsqlCommand(
+                            $"SELECT id\r\n" +
+                            $"FROM (SELECT id FROM trafreport\r\n" +
+                            $" WHERE cause = {report.Cause}" +
+                            $" AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id\r\n",
+                            connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         if (reader.HasRows)
                         {
-<<<<<<< HEAD
-                            returnValue = (Guid)reader.GetDataSafely<Guid>("report_uuid");
-                        }
-
-                    }
-                    
-                    reader.Close();
-                }
-                
-=======
                             while (reader.Read())
                             {
                                 returnValue = reader.GetDataSafely<Guid>("id");
@@ -172,7 +135,6 @@ namespace TrafficReporter.Repository
                         reader.Close();
                     }
                 } 
->>>>>>> hotfix/RepoAndServiceOptimization
             }
 
             return returnValue;
@@ -181,10 +143,9 @@ namespace TrafficReporter.Repository
         public async Task<IReport> GetReportAsync(Guid id)
         {
             IReport report = null;
-            _log.Info("Get report");
 
-            using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
-                .ConnectionString))
+
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
@@ -195,15 +156,17 @@ namespace TrafficReporter.Repository
                     {
                         while (reader.Read())
                         {
-                            report = new Report();
-                            report.Id = id;
-                            report.Cause = (int)reader.GetDataSafely<int>("cause");
-                            report.Rating = (int)reader.GetDataSafely<int>("rating");
-                            //report.Direction = (Direction)reader.GetDataSafely<Direction>("direction");
-                            report.Longitude = (double)reader.GetDataSafely<double>("longitude");
-                            report.Lattitude = (double)reader.GetDataSafely<double>("lattitude");
-                            report.DateCreated = (DateTime)reader.GetDataSafely<DateTime>("date_created");
-                        } 
+
+                                report = new Report();
+                                report.Id = id;
+                                report.Cause = reader.GetDataSafely<int>("cause");
+                                report.Rating = reader.GetDataSafely<int>("rating");
+                                report.Direction = reader.GetDataSafely<Direction>("direction");
+                                report.Longitude = reader.GetDataSafely<double>("longitude");
+                                report.Lattitude = reader.GetDataSafely<double>("lattitude");
+                                report.DateCreated = reader.GetDataSafely<DateTime>("date_created");
+                           
+                        }
                     }
                     reader.Close();
                 }
@@ -224,72 +187,63 @@ namespace TrafficReporter.Repository
         {
             List<IReport> reports = new List<IReport>();
 
-            using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
-                .ConnectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
                 using (var command = new NpgsqlCommand())
                 {
+                    command.Connection = connection;
+                    var commandText = new StringBuilder("SELECT * FROM trafreport ");
 
-                    if (filter.Cause != 0)
+                    //If there is at least one filter, then apply
+                    //WHERE part of the SQL query.
+                    if (filter != null)
                     {
-                        _log.Info("Filter reports");
-                        command.Connection = connection;
-                        var commandText = new StringBuilder("SELECT * FROM trafreport ");
+                        commandText.Append("WHERE ");
 
-                        //If there is at least one filter, then apply
-                        //WHERE part of the SQL query.
-                        if (filter != null)
+                        //This is filtering like here:
+                        //https://timdams.com/2011/02/14/using-enum-flags-to-write-filters-in-linq/
+                        if (filter.Cause != 0)
                         {
-                            commandText.Append("WHERE ");
-
-                            //This is filtering like here:
-                            //https://timdams.com/2011/02/14/using-enum-flags-to-write-filters-in-linq/
-                            if (filter.Cause != 0)
-                            {
-                                //I'm here adding AND  because coordinates must be specified or
-                                //db could be outputting reports that might be out of the area
-                                //of visible map.
-                                commandText.Append($"cause & {filter.Cause} > 0 AND ");
-
-
-                                commandText.Append($"longitude BETWEEN {filter.LowerLeftX} AND {filter.UpperRightX} AND ");
-                                commandText.Append($"lattitude BETWEEN {filter.LowerLeftY} AND {filter.UpperRightY}");
-
-                                commandText.Append($"");
-
-                                commandText.Append($"LIMIT {filter.PageSize}");
-
-                            }
-                            command.CommandText = commandText.ToString().Replace(',', '.');
-
-                            using (var reader = await command.ExecuteReaderAsync())
-                            {
-                                while (reader.Read())
-                                {
-                                    var report = new Report();
-                                    report.Id = (Guid)reader.GetDataSafely<Guid>("id");
-                                    report.Cause = (int)reader.GetDataSafely<int>("cause");
-                                    report.Rating = (int)reader.GetDataSafely<int>("rating");
-                                    //report.Direction = (Direction)reader.GetDataSafely<Direction>("direction");
-                                    report.Longitude = (double)reader.GetDataSafely<double>("longitude");
-                                    report.Lattitude = (double)reader.GetDataSafely<double>("lattitude");
-                                    report.DateCreated = (DateTime)reader.GetDataSafely<DateTime>("date_created");
-                                    reports.Add(report);
-                                }
-
-                                reader.Close();
-                            }
+                            //I'm here adding AND  because coordinates must be specified or
+                            //db could be outputting reports that might be out of the area
+                            //of visible map.
+                            commandText.Append($"cause & {filter.Cause} > 0 AND ");
                         }
-                        connection.Close();
+
+
+                        commandText.Append($"longitude BETWEEN {filter.LowerLeftX} AND {filter.UpperRightX} AND ");
+                        commandText.Append($"lattitude BETWEEN {filter.LowerLeftY} AND {filter.UpperRightY}");
+
+                        commandText.Append($"");
+
+                        commandText.Append($"LIMIT {filter.PageSize}");
                     }
+                    command.CommandText = commandText.ToString().Replace(',', '.');
 
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            var report = new Report();
+                            report.Id = reader.GetDataSafely<Guid>("id");
+                            report.Cause = reader.GetDataSafely<int>("cause");
+                            report.Rating = reader.GetDataSafely<int>("rating");
+                            report.Direction = reader.GetDataSafely<Direction>("direction");
+                            report.Longitude = reader.GetDataSafely<double>("longitude");
+                            report.Lattitude = reader.GetDataSafely<double>("lattitude");
+                            report.DateCreated = reader.GetDataSafely<DateTime>("date_created");
+                            reports.Add(report);
+                        }
+
+                        reader.Close();
+                    }
                 }
+                connection.Close();
             }
-            return reports;
 
-            
+            return reports;
         }
 
         /// <summary>
@@ -304,10 +258,8 @@ namespace TrafficReporter.Repository
         {
             var rowsAffrected = 0;
 
-            using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
-                .ConnectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
-                _log.Info("Removed reports");
                 await connection.OpenAsync();
 
                 using (var command = new NpgsqlCommand())
