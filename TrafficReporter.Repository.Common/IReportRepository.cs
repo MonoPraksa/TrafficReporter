@@ -18,6 +18,22 @@ namespace TrafficReporter.Repository.Common
         Task<int> AddReportAsync(IReport report);
 
         /// <summary>
+        /// This method checks if other reports with same cause exist 
+        /// within range.
+        /// </summary>
+        /// <param name="report">Report to perfrom check upon</param>
+        /// <returns>Id of a report nearby with same cause.</returns>
+        Task<Guid> CheckIfOtherReportInRangeAsync(IReport report);
+
+        /// <summary>
+        /// Updates time remaining(like life duration in database) based on cause of a report.
+        /// </summary>
+        /// <param name="reportInRangeId">Id of a report to be updated.</param>
+        /// <param name="cause">This value is used to reset time_remaining.</param>
+        /// <returns>Number of rows affected.</returns>
+        Task<int> UpdateTimeAndRatingAsync(Guid reportInRangeId, int cause);
+
+        /// <summary>
         /// Gets report from database which has passed parameter id.
         /// </summary>
         /// <param name="id"></param>

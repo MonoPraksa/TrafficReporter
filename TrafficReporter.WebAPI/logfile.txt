@@ -9,3 +9,19 @@
 2017-08-31 11:59:19,952 [5] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Report added
 2017-08-31 11:59:19,954 [5] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
 2017-08-31 11:59:19,954 [5] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
+2017-08-31 13:15:52,877 [5] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
+2017-08-31 13:15:52,917 [5] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
+2017-08-31 13:16:10,434 [6] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Report added
+2017-08-31 13:16:10,436 [6] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
+2017-08-31 13:16:10,437 [6] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
+2017-08-31 13:16:55,720 [11] INFO  TrafficReporter.Repository.ReportRepository [(null)] - Filter reports
+2017-08-31 13:19:57,498 [5] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
+2017-08-31 13:19:57,549 [5] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
+2017-08-31 13:20:17,889 [7] INFO  TrafficReporter.Repository.ReportRepository [(null)] - Filter reports
+2017-08-31 13:29:24,747 [5] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
+2017-08-31 13:29:24,810 [5] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
+2017-08-31 13:30:27,077 [8] INFO  TrafficReporter.Repository.ReportRepository [(null)] - Filter reports
+2017-08-31 13:32:40,211 [5] INFO  TrafficReporter.Repository.ReportRepository [(null)] - Check if in range...
+2017-08-31 13:32:40,445 [7] INFO  TrafficReporter.Repository.ReportRepository [(null)] - Updated
+2017-08-31 14:10:14,855 [6] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
+2017-08-31 14:10:14,875 [6] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
