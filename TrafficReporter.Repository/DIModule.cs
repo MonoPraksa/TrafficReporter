@@ -1,4 +1,5 @@
-﻿using Ninject.Modules;
+﻿using System.Configuration;
+using Ninject.Modules;
 using TrafficReporter.Repository.Common;
 
 namespace TrafficReporter.Repository
@@ -7,8 +8,10 @@ namespace TrafficReporter.Repository
     {
         public override void Load()
         {
-            Bind<IReportRepository>().To<ReportRepository>();
-            Bind<ICauseRepository>().To<CauseRepository>();
+            //If someone wants to change how to get connection string, you can do it here.
+            Bind<IReportRepository>().To<ReportRepository>().InSingletonScope()
+                .WithConstructorArgument(typeof(string), ConfigurationManager.ConnectionStrings["RemoteDB"].ConnectionString);
+            //Bind<ICauseRepository>().To<CauseRepository>();
         }
     }
 }

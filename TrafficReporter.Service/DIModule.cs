@@ -12,7 +12,7 @@ namespace TrafficReporter.Service
     {
         public override void Load()
         {
-            Bind<IReportService>().To<ReportService>();
+            Bind<IReportService>().To<ReportService>().InSingletonScope();
             Bind<ICauseService>().To<CauseService>();
         }
     }
