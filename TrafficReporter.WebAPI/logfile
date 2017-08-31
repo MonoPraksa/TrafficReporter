@@ -1,0 +1,12 @@
+2017-08-31 10:48:42,046 [8] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
+2017-08-31 10:48:42,088 [8] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
+2017-08-31 11:03:18,277 [6] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
+2017-08-31 11:03:18,308 [6] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
+2017-08-31 11:03:18,309 [6] WARN  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Warn message
+2017-08-31 11:03:18,310 [6] ERROR TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Error message
+2017-08-31 11:03:18,311 [6] FATAL TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Fatal message
+2017-08-31 11:07:36,896 [5] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
+2017-08-31 11:07:36,941 [5] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
+2017-08-31 11:07:36,942 [5] WARN  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Warn message
+2017-08-31 11:07:36,943 [5] ERROR TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Error message
+2017-08-31 11:07:36,944 [5] FATAL TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Fatal message
