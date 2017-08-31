@@ -163,7 +163,7 @@ namespace TrafficReporter.Repository
                                 report.Id = id;
                                 report.Cause = reader.GetDataSafely<int>("cause");
                                 report.Rating = reader.GetDataSafely<int>("rating");
-                                report.Direction = reader.GetDataSafely<Direction>("direction");
+                                //report.Direction = reader.GetDataSafely<Direction>("direction");
                                 report.Longitude = reader.GetDataSafely<double>("longitude");
                                 report.Lattitude = reader.GetDataSafely<double>("lattitude");
                                 report.DateCreated = reader.GetDataSafely<DateTime>("date_created");
@@ -232,7 +232,7 @@ namespace TrafficReporter.Repository
                             report.Id = reader.GetDataSafely<Guid>("id");
                             report.Cause = reader.GetDataSafely<int>("cause");
                             report.Rating = reader.GetDataSafely<int>("rating");
-                            report.Direction = reader.GetDataSafely<Direction>("direction");
+                            //report.Direction = reader.GetDataSafely<Direction>("direction");
                             report.Longitude = reader.GetDataSafely<double>("longitude");
                             report.Lattitude = reader.GetDataSafely<double>("lattitude");
                             report.DateCreated = reader.GetDataSafely<DateTime>("date_created");
