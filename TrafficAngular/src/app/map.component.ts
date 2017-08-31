@@ -16,11 +16,12 @@ import { Markers } from './marker';
 })
 
 export class MapComponent implements OnInit {
-  filter: number = 0; // sadrži postavke filtra po cause
+  filter: number = 63; // sadrži postavke filtra po cause
   lat: number;        //  <-.
   lng: number;        //  <-+ trenutne kordinate
   marker: Markers;    //  
   tracker: any;
+  navigationDisabled: boolean= false;  
  public map:any;            //  za dohvaćanje google map instance
  public directionsDisplay: any;   // za prikazivanje rute
  public search: any;        //  za dohvaćanje google searchbox instance
@@ -52,15 +53,21 @@ export class MapComponent implements OnInit {
 
 
 initMap(position):void {
-  console.log("Position");
-  console.log(position);
+  /*let position = {coords:{latitude:46, longitude: 16}}; */
+  if(position.code){
+    this.navigationDisabled=true;
+    position.coords = {latitude:46, longitude: 16};
+    alert("We could not get your location, which limits website functionality\n Reason: "+position.message);
+    console.log(position.message);
+  }
+ 
   let selfRef = this;     
   
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
         this.map = new google.maps.Map(this.elementRef.nativeElement.children[0], {
         //this.map = new google.maps.Map(document.getElementById('map'),{
-          zoom: 10,
+          zoom: 14,
           center: this,
           streetViewControl: false,
           mapTypeControl: false,
@@ -85,6 +92,7 @@ initMap(position):void {
             report.forEach(function(rep) {      // i dodaj nove
              selfRef.marker.create(selfRef.map,rep);
             });
+            selfRef.marker.current(selfRef.map,selfRef);
         });
       });
 
@@ -135,8 +143,9 @@ setPosition(position){
   this.map.setCenter(this);
 }
 
-trackingToggle(){
+trackingToggle(){                     // set zoom level of map and centers map on current location every second
   if(!this.tracker){
+    this.map.setZoom(16);
     this.tracker = setInterval( this.updatePosition,1000, this);
   }
   else{
@@ -166,13 +175,11 @@ updateReports(selfRef: any):void{
 }
 
     ngOnInit(): void {
-        if(!navigator.geolocation){
-            navigator.geolocation.getCurrentPosition(this.initMap.bind(this));
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(this.initMap.bind(this),this.initMap.bind(this));
         }
         else{
           let position = {coords:{latitude:46, longitude: 16}};
-          console.log(navigator);
-          console.log(position);
           this.initMap.bind(position);
         }
          // console.log(this.elementRef);

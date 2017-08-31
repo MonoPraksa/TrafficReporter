@@ -25,6 +25,13 @@ static Collection = [];
         });
     }
 
+    current(map:any,pos){
+        Markers.Collection[Markers.Collection.length] = new google.maps.Marker({
+            position: pos,
+            map: map,
+        });
+    }
+
     // Remove all markers from the map
     empty(): void{
         Markers.Collection.forEach(marker => {

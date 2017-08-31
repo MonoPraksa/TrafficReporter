@@ -1,5 +1,7 @@
 <div [hidden]="communicationService.directionsStateHidden">
-<input [(ngModel)]="origin" placeholder="Starting point" /> <br>
-<input [(ngModel)]="destination" placeholder="Destination" /> <br>
+<input placeholder="Starting point" [disabled]="useCurrentLocation"/> <img src="../assets/images/marker.png" title="Use current location" (click)="toggleCurrentLocation()"/>
+<br>
+<input placeholder="Destination" /> 
+<br>
 <button (click)="sendToMap()"> Find a way</button>
 </div> 
