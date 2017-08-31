@@ -17,6 +17,7 @@ namespace TrafficReporter.Repository
 {
     class CauseRepository : ICauseRepository
     {
+        
         public CauseRepository()
         {
             

@@ -11,6 +11,8 @@ namespace TrafficReporter.DAL.Entity_Models
 {
     public class ReportEntity
     {
+       
+
         /// <summary>
         /// Unique identifier which differs one report to another.
         /// </summary>

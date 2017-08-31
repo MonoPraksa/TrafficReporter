@@ -1,0 +1,5 @@
+2017-08-31 11:37:08,151 [5] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
+2017-08-31 11:37:08,197 [5] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
+2017-08-31 11:37:08,198 [5] WARN  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Warn message
+2017-08-31 11:37:08,198 [5] ERROR TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Error message
+2017-08-31 11:37:08,199 [5] FATAL TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Fatal message

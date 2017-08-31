@@ -13,6 +13,7 @@ using TrafficReporter.Common;
 using TrafficReporter.Common.Enums;
 using TrafficReporter.Common.Filter;
 using TrafficReporter.DAL.Entity_Models;
+using log4net;
 
 namespace TrafficReporter.Repository
 {
@@ -22,6 +23,8 @@ namespace TrafficReporter.Repository
     /// </summary>
     public class ReportRepository : IReportRepository
     {
+        private static readonly ILog _log = LogManager.GetLogger(typeof(ReportRepository));
+
         #region Constructors
 
         public ReportRepository()
@@ -100,7 +103,7 @@ namespace TrafficReporter.Repository
             {
                 rowsAffected = await command.ExecuteNonQueryAsync();
             }
-
+            _log.Info("Updated");
             return rowsAffected;
         }
 
@@ -122,6 +125,7 @@ namespace TrafficReporter.Repository
                     $"({report.Longitude.ToString().Replace(',', '.')}, {report.Lattitude.ToString().Replace(',', '.')}, {report.Cause})",
                     connection))
             {
+                _log.Info("Check if in range...");
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (reader.HasRows)
@@ -144,7 +148,7 @@ namespace TrafficReporter.Repository
         public async Task<IReport> GetReportAsync(Guid id)
         {
             IReport report = null;
-
+            _log.Info("Get report");
 
             using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
                 .ConnectionString))
@@ -194,57 +198,65 @@ namespace TrafficReporter.Repository
 
                 using (var command = new NpgsqlCommand())
                 {
-                    if (filter.Cause != 0){
-                    command.Connection = connection;
-                    var commandText = new StringBuilder("SELECT * FROM trafreport ");
 
-                    //If there is at least one filter, then apply
-                    //WHERE part of the SQL query.
-                    if (filter != null)
+                    if (filter.Cause != 0)
                     {
-                        commandText.Append("WHERE ");
+                        _log.Info("Filter reports");
+                        command.Connection = connection;
+                        var commandText = new StringBuilder("SELECT * FROM trafreport ");
 
-                        //This is filtering like here:
-                        //https://timdams.com/2011/02/14/using-enum-flags-to-write-filters-in-linq/
-                            //I'm here adding AND  because coordinates must be specified or
-                            //db could be outputting reports that might be out of the area
-                            //of visible map.
-                            commandText.Append($"cause & {filter.Cause} > 0 AND ");
-
-                        
-                        commandText.Append($"longitude BETWEEN {filter.LowerLeftX} AND {filter.UpperRightX} AND ");
-                        commandText.Append($"lattitude BETWEEN {filter.LowerLeftY} AND {filter.UpperRightY}");
-
-                        commandText.Append($"ORDER BY rating ");
-
-                        commandText.Append($"LIMIT {filter.PageSize}");
-
-                    }
-                    command.CommandText = commandText.ToString().Replace(',', '.');
-
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (reader.Read())
+                        //If there is at least one filter, then apply
+                        //WHERE part of the SQL query.
+                        if (filter != null)
                         {
-                            var report = new Report();
-                            report.Id = (Guid) reader.GetDataSafely("id");
-                            report.Cause = (int) reader.GetDataSafely("cause");
-                            report.Rating = (int) reader.GetDataSafely("rating");
-                            report.Direction = (Direction) reader.GetDataSafely("direction");
-                            report.Longitude = (double) reader.GetDataSafely("longitude");
-                            report.Lattitude = (double) reader.GetDataSafely("lattitude");
-                            report.DateCreated = (DateTime) reader.GetDataSafely("date_created");
-                            reports.Add(report);
+                            commandText.Append("WHERE ");
+
+                            //This is filtering like here:
+                            //https://timdams.com/2011/02/14/using-enum-flags-to-write-filters-in-linq/
+                            if (filter.Cause != 0)
+                            {
+                                //I'm here adding AND  because coordinates must be specified or
+                                //db could be outputting reports that might be out of the area
+                                //of visible map.
+                                commandText.Append($"cause & {filter.Cause} > 0 AND ");
+
+
+                                commandText.Append($"longitude BETWEEN {filter.LowerLeftX} AND {filter.UpperRightX} AND ");
+                                commandText.Append($"lattitude BETWEEN {filter.LowerLeftY} AND {filter.UpperRightY}");
+
+                                commandText.Append($"");
+
+                                commandText.Append($"LIMIT {filter.PageSize}");
+
+                            }
+                            command.CommandText = commandText.ToString().Replace(',', '.');
+
+                            using (var reader = await command.ExecuteReaderAsync())
+                            {
+                                while (reader.Read())
+                                {
+                                    var report = new Report();
+                                    report.Id = (Guid)reader.GetDataSafely("id");
+                                    report.Cause = (int)reader.GetDataSafely("cause");
+                                    report.Rating = (int)reader.GetDataSafely("rating");
+                                    report.Direction = (Direction)reader.GetDataSafely("direction");
+                                    report.Longitude = (double)reader.GetDataSafely("longitude");
+                                    report.Lattitude = (double)reader.GetDataSafely("lattitude");
+                                    report.DateCreated = (DateTime)reader.GetDataSafely("date_created");
+                                    reports.Add(report);
+                                }
+
+                                reader.Close();
+                            }
                         }
-
-                        reader.Close();
+                        connection.Close();
                     }
-                }
-                connection.Close();
-            }
 
-            return reports;
+                }
             }
+            return reports;
+
+            
         }
 
         /// <summary>
@@ -262,6 +274,7 @@ namespace TrafficReporter.Repository
             using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
                 .ConnectionString))
             {
+                _log.Info("Removed reports");
                 await connection.OpenAsync();
 
                 using (var command = new NpgsqlCommand())
