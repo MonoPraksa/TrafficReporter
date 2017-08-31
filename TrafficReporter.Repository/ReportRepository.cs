@@ -213,8 +213,7 @@ namespace TrafficReporter.Repository
 
                             //This is filtering like here:
                             //https://timdams.com/2011/02/14/using-enum-flags-to-write-filters-in-linq/
-                            if (filter.Cause != 0)
-                            {
+                            
                                 //I'm here adding AND  because coordinates must be specified or
                                 //db could be outputting reports that might be out of the area
                                 //of visible map.
@@ -253,7 +252,7 @@ namespace TrafficReporter.Repository
                     }
 
                 }
-            }
+            
             return reports;
 
             
