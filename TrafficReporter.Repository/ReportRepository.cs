@@ -98,7 +98,7 @@ namespace TrafficReporter.Repository
         {
             int rowsAffected = 0;
 
-            using (var command = new NpgsqlCommand($"UPDATE trafreport SET time_remaining = get_time({cause}), rating = rating + 1 " +
+            using (var command = new NpgsqlCommand($"UPDATE trafreport SET time_remaining = (SELECT time_remaining FROM cause_table WHERE id = {cause}), rating = rating + 1 " +
                                                    $"WHERE id = '{reportInRangeId}'", connection))
             {
                 rowsAffected = await command.ExecuteNonQueryAsync();
@@ -121,8 +121,7 @@ namespace TrafficReporter.Repository
 
             using (var command =
                 new NpgsqlCommand(
-                    "SELECT report_uuid FROM get_reports_with_same_cause_and_within_range" +
-                    $"({report.Longitude.ToString().Replace(',', '.')}, {report.Lattitude.ToString().Replace(',', '.')}, {report.Cause})",
+                    $"SELECT id FROM (SELECT id FROM trafreport WHERE cause = {report.Cause} AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude) < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id",
                     connection))
             {
                 _log.Info("Check if in range...");
@@ -132,7 +131,7 @@ namespace TrafficReporter.Repository
                     {
                         while (reader.Read())
                         {
-                            returnValue = (Guid)reader.GetDataSafely("report_uuid");
+                            returnValue = (Guid)reader.GetDataSafely<Guid>("report_uuid");
                         }
 
                     }
@@ -164,12 +163,12 @@ namespace TrafficReporter.Repository
                         {
                             report = new Report();
                             report.Id = id;
-                            report.Cause = (int)reader.GetDataSafely("cause");
-                            report.Rating = (int)reader.GetDataSafely("rating");
-                            report.Direction = (Direction)reader.GetDataSafely("direction");
-                            report.Longitude = (double)reader.GetDataSafely("longitude");
-                            report.Lattitude = (double)reader.GetDataSafely("lattitude");
-                            report.DateCreated = (DateTime)reader.GetDataSafely("date_created");
+                            report.Cause = (int)reader.GetDataSafely<int>("cause");
+                            report.Rating = (int)reader.GetDataSafely<int>("rating");
+                            //report.Direction = (Direction)reader.GetDataSafely<Direction>("direction");
+                            report.Longitude = (double)reader.GetDataSafely<double>("longitude");
+                            report.Lattitude = (double)reader.GetDataSafely<double>("lattitude");
+                            report.DateCreated = (DateTime)reader.GetDataSafely<DateTime>("date_created");
                         } 
                     }
                     reader.Close();
@@ -236,13 +235,13 @@ namespace TrafficReporter.Repository
                                 while (reader.Read())
                                 {
                                     var report = new Report();
-                                    report.Id = (Guid)reader.GetDataSafely("id");
-                                    report.Cause = (int)reader.GetDataSafely("cause");
-                                    report.Rating = (int)reader.GetDataSafely("rating");
-                                    report.Direction = (Direction)reader.GetDataSafely("direction");
-                                    report.Longitude = (double)reader.GetDataSafely("longitude");
-                                    report.Lattitude = (double)reader.GetDataSafely("lattitude");
-                                    report.DateCreated = (DateTime)reader.GetDataSafely("date_created");
+                                    report.Id = (Guid)reader.GetDataSafely<Guid>("id");
+                                    report.Cause = (int)reader.GetDataSafely<int>("cause");
+                                    report.Rating = (int)reader.GetDataSafely<int>("rating");
+                                    //report.Direction = (Direction)reader.GetDataSafely<Direction>("direction");
+                                    report.Longitude = (double)reader.GetDataSafely<double>("longitude");
+                                    report.Lattitude = (double)reader.GetDataSafely<double>("lattitude");
+                                    report.DateCreated = (DateTime)reader.GetDataSafely<DateTime>("date_created");
                                     reports.Add(report);
                                 }
 
