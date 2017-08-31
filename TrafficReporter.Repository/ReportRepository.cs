@@ -53,6 +53,7 @@ namespace TrafficReporter.Repository
             {
                 await connection.OpenAsync();
 
+<<<<<<< HEAD
                 //This method should add only if other report in range and with same
                 //cause doesn't exist.
                 var reportInRangeId = await CheckIfOtherReportInRangeAsync(report, connection);
@@ -62,6 +63,9 @@ namespace TrafficReporter.Repository
                     connection.Close();
                     return (int)Inserted.Updated;
                 }
+=======
+                
+>>>>>>> hotfix/RepoAndServiceOptimization
 
                 #region AddReport
                 
@@ -80,7 +84,12 @@ namespace TrafficReporter.Repository
                     command.Parameters.AddWithValue("date_created", report.DateCreated);
                     rowsAffrected = await command.ExecuteNonQueryAsync();
                 }
+<<<<<<< HEAD
                 await UpdateTimeAndRatingAsync(report.Id, report.Cause, connection);
+=======
+                await UpdateTimeAndRatingAsync(report.Id, report.Cause);
+
+>>>>>>> hotfix/RepoAndServiceOptimization
                 #endregion AddReport
                 connection.Close();
             }
@@ -88,37 +97,37 @@ namespace TrafficReporter.Repository
             return (int)Inserted.Added;
         }
 
-        /// <summary>
-        /// Updates report which has passed id by reseting time_remaining and incrementing rating.
-        /// </summary>
-        /// <param name="reportInRangeId">Unique identifier.</param>
-        /// <param name="cause">Cause used to get amount for time reseting.</param>
-        /// <param name="connection">Connection to PostgreSql.</param>
-        private async Task<int> UpdateTimeAndRatingAsync(Guid reportInRangeId, int cause, NpgsqlConnection connection)
+        public async Task<int> UpdateTimeAndRatingAsync(Guid reportInRangeId, int cause)
         {
             int rowsAffected = 0;
 
+<<<<<<< HEAD
             using (var command = new NpgsqlCommand($"UPDATE trafreport SET time_remaining = (SELECT time_remaining FROM cause_table WHERE id = {cause}), rating = rating + 1 " +
                                                    $"WHERE id = '{reportInRangeId}'", connection))
+=======
+            using (var connection = new NpgsqlConnection(_connectionString))
+>>>>>>> hotfix/RepoAndServiceOptimization
             {
-                rowsAffected = await command.ExecuteNonQueryAsync();
+                await connection.OpenAsync();
+
+                using (var command = new NpgsqlCommand(
+                        $"UPDATE trafreport SET time_remaining = (SELECT time_remaining FROM cause_table WHERE id = {cause}), rating = rating + 1 " +
+                        $"WHERE id = '{reportInRangeId}'", connection))
+                {
+                    rowsAffected = await command.ExecuteNonQueryAsync();
+                }
+                
+                connection.Close(); 
             }
             _log.Info("Updated");
             return rowsAffected;
         }
 
-        ///  <summary>
-        ///  This is a private method for the add method which checks
-        ///  if other report of same cause and within range exists.
-        ///  </summary>
-        ///  <param name="report">Report for which we want to check if there are other reports in range of this one.</param>
-        /// <param name="connection">Connection to PostgreSQL</param>
-        /// <returns>Report id within range if it exists.(We need only one id for updating(reset time and increase rating).)</returns>
-        /// todo should we check for same id?
-        private async Task<Guid> CheckIfOtherReportInRangeAsync(IReport report, NpgsqlConnection connection)
+        public async Task<Guid> CheckIfOtherReportInRangeAsync(IReport report)
         {
             Guid returnValue = Guid.Empty;
 
+<<<<<<< HEAD
             using (var command =
                 new NpgsqlCommand(
                     $"SELECT id FROM (SELECT id FROM trafreport WHERE cause = {report.Cause} AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude) < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id",
@@ -126,11 +135,25 @@ namespace TrafficReporter.Repository
             {
                 _log.Info("Check if in range...");
                 using (var reader = await command.ExecuteReaderAsync())
+=======
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command =
+                       new NpgsqlCommand(
+                           $"SELECT id\r\n" +
+                           $"FROM (SELECT id FROM trafreport\r\n" +
+                           $" WHERE cause = {report.Cause}" +
+                           $" AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id\r\n",
+                           connection))
+>>>>>>> hotfix/RepoAndServiceOptimization
                 {
-                    if (reader.HasRows)
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        if (reader.HasRows)
                         {
+<<<<<<< HEAD
                             returnValue = (Guid)reader.GetDataSafely<Guid>("report_uuid");
                         }
 
@@ -139,6 +162,17 @@ namespace TrafficReporter.Repository
                     reader.Close();
                 }
                 
+=======
+                            while (reader.Read())
+                            {
+                                returnValue = reader.GetDataSafely<Guid>("id");
+                            }
+                        }
+
+                        reader.Close();
+                    }
+                } 
+>>>>>>> hotfix/RepoAndServiceOptimization
             }
 
             return returnValue;

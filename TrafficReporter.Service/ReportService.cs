@@ -25,7 +25,7 @@ namespace TrafficReporter.Service
         /// <param name="repository">The repository.</param>
         public ReportService(IReportRepository repository)
         {
-            this.Repository = repository;
+            _repository = repository;
         }
 
         #endregion Constructors
@@ -38,7 +38,7 @@ namespace TrafficReporter.Service
         /// <value>
         /// The repository.
         /// </value>
-        protected IReportRepository Repository { get; private set; }
+        private readonly IReportRepository _repository;
 
         #endregion Properties 
 
@@ -47,19 +47,26 @@ namespace TrafficReporter.Service
 
 
         /// <summary>
-        /// Adds report trough repository method.
-        /// Also if something happens during add, this method can throw exception
-        /// and methods invoking this can respond to that.
+        /// Adds report if other reports nearby don't exist trough repository method.
         /// </summary>
-        /// <param name="report"></param>
+        /// <param name="report">Report to be added.</param>
         /// <returns>
-        /// True or false depending on operation success.
+        /// Returns result of an operation.
         /// </returns>
         public async Task<Inserted> AddReportAsync(IReport report)
         {
-            
+            //Check if other reports exist nearby.
+            var reportInRangeId = await _repository.CheckIfOtherReportInRangeAsync(report);
+            if (!reportInRangeId.Equals(Guid.Empty))
+            {
+                int rowsAffected = await _repository.UpdateTimeAndRatingAsync(reportInRangeId, report.Cause);
+
+                return Inserted.Updated;
+            }
+
+            //If other reports don't exist, then add new report
             report.Id = Guid.NewGuid();
-            if (await Repository.AddReportAsync(report) != 1)
+            if (await _repository.AddReportAsync(report) != 1)
                 return Inserted.Updated;
 
             return Inserted.Added;
@@ -75,7 +82,7 @@ namespace TrafficReporter.Service
         public Task<IReport> GetReportAsync(Guid id)
         {
            
-            return Repository.GetReportAsync(id);
+            return _repository.GetReportAsync(id);
         }
 
 
@@ -89,7 +96,7 @@ namespace TrafficReporter.Service
         public Task<int> RemoveReportAsync(Guid id)
         {
             
-            return Repository.RemoveReportAsync(id);
+            return _repository.RemoveReportAsync(id);
         }
 
 
@@ -103,7 +110,7 @@ namespace TrafficReporter.Service
         public Task<IEnumerable<IReport>> GetFilteredReportsAsync(IFilter filter=null)
         {
             
-            return Repository.GetFilteredReportsAsync(filter);
+            return _repository.GetFilteredReportsAsync(filter);
         }
 
         
