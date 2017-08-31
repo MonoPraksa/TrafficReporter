@@ -5,6 +5,7 @@ using TrafficReporter.Repository.Common;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +23,19 @@ namespace TrafficReporter.Repository
     /// </summary>
     public class ReportRepository : IReportRepository
     {
+        private readonly string _connectionString;
+
         #region Constructors
 
-        public ReportRepository()
+
+        /// <summary>
+        /// Connection string is now injected trough ninject module.
+        /// <see cref="DIModule"/>
+        /// </summary>
+        /// <param name="connectionString">To be injected</param>
+        public ReportRepository(string connectionString)
         {
+            _connectionString = connectionString;
         }
 
         #endregion Constructors
@@ -44,8 +54,7 @@ namespace TrafficReporter.Repository
             var rowsAffrected = 0;
 
 
-            using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
-                .ConnectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
@@ -133,7 +142,7 @@ namespace TrafficReporter.Repository
                     {
                         while (reader.Read())
                         {
-                            returnValue = (Guid) reader.GetDataSafely("report_uuid");
+                            returnValue = reader.GetDataSafely<Guid>("id");
                         }
                     }
 
@@ -149,8 +158,7 @@ namespace TrafficReporter.Repository
             IReport report = null;
 
 
-            using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
-                .ConnectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
@@ -161,14 +169,16 @@ namespace TrafficReporter.Repository
                     {
                         while (reader.Read())
                         {
-                            report = new Report();
-                            report.Id = id;
-                            report.Cause = (int) reader.GetDataSafely("cause");
-                            report.Rating = (int) reader.GetDataSafely("rating");
-                            report.Direction = (Direction) reader.GetDataSafely("direction");
-                            report.Longitude = (double) reader.GetDataSafely("longitude");
-                            report.Lattitude = (double) reader.GetDataSafely("lattitude");
-                            report.DateCreated = (DateTime) reader.GetDataSafely("date_created");
+
+                                report = new Report();
+                                report.Id = id;
+                                report.Cause = reader.GetDataSafely<int>("cause");
+                                report.Rating = reader.GetDataSafely<int>("rating");
+                                report.Direction = reader.GetDataSafely<Direction>("direction");
+                                report.Longitude = reader.GetDataSafely<double>("longitude");
+                                report.Lattitude = reader.GetDataSafely<double>("lattitude");
+                                report.DateCreated = reader.GetDataSafely<DateTime>("date_created");
+                           
                         }
                     }
                     reader.Close();
@@ -190,8 +200,7 @@ namespace TrafficReporter.Repository
         {
             List<IReport> reports = new List<IReport>();
 
-            using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
-                .ConnectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
@@ -231,13 +240,13 @@ namespace TrafficReporter.Repository
                         while (reader.Read())
                         {
                             var report = new Report();
-                            report.Id = (Guid) reader.GetDataSafely("id");
-                            report.Cause = (int) reader.GetDataSafely("cause");
-                            report.Rating = (int) reader.GetDataSafely("rating");
-                            report.Direction = (Direction) reader.GetDataSafely("direction");
-                            report.Longitude = (double) reader.GetDataSafely("longitude");
-                            report.Lattitude = (double) reader.GetDataSafely("lattitude");
-                            report.DateCreated = (DateTime) reader.GetDataSafely("date_created");
+                            report.Id = reader.GetDataSafely<Guid>("id");
+                            report.Cause = reader.GetDataSafely<int>("cause");
+                            report.Rating = reader.GetDataSafely<int>("rating");
+                            report.Direction = reader.GetDataSafely<Direction>("direction");
+                            report.Longitude = reader.GetDataSafely<double>("longitude");
+                            report.Lattitude = reader.GetDataSafely<double>("lattitude");
+                            report.DateCreated = reader.GetDataSafely<DateTime>("date_created");
                             reports.Add(report);
                         }
 
@@ -262,8 +271,7 @@ namespace TrafficReporter.Repository
         {
             var rowsAffrected = 0;
 
-            using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
-                .ConnectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
