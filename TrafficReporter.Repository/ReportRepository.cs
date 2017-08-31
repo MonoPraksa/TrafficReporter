@@ -93,6 +93,8 @@ namespace TrafficReporter.Repository
 
             using (var connection = new NpgsqlConnection(_connectionString))
             {
+                await connection.OpenAsync();
+
                 using (var command = new NpgsqlCommand(
                         $"UPDATE trafreport SET time_remaining = (SELECT time_remaining FROM cause_table WHERE id = {cause}), rating = rating + 1 " +
                         $"WHERE id = '{reportInRangeId}'", connection))
