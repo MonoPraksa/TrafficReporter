@@ -23,3 +23,5 @@
 2017-08-31 13:30:27,077 [8] INFO  TrafficReporter.Repository.ReportRepository [(null)] - Filter reports
 2017-08-31 13:32:40,211 [5] INFO  TrafficReporter.Repository.ReportRepository [(null)] - Check if in range...
 2017-08-31 13:32:40,445 [7] INFO  TrafficReporter.Repository.ReportRepository [(null)] - Updated
+2017-08-31 14:10:14,855 [6] INFO  TrafficReporter.WebAPI.Controllers.HomeController [(null)] - App started
+2017-08-31 14:10:14,875 [6] DEBUG TrafficReporter.WebAPI.Controllers.HomeController [(null)] - Debug message
