@@ -25,5 +25,6 @@ namespace TrafficReporter.Service
         {
             return _causeRepository.GetCausesAsync();
         }
+        
     }
 }

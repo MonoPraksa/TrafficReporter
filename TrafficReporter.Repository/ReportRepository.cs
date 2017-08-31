@@ -22,6 +22,7 @@ namespace TrafficReporter.Repository
     /// </summary>
     public class ReportRepository : IReportRepository
     {
+        
         #region Constructors
 
         public ReportRepository()

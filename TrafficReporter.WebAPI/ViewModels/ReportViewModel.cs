@@ -27,5 +27,7 @@ namespace TrafficReporter.WebAPI.ViewModels
         [Required]
         //todo make DateCreated to pass like UTC time.
         public DateTime DateCreated { get; set; }
+
+        
     }
 }

@@ -15,6 +15,7 @@ using TrafficReporter.Service;
 using System.Net.Http;
 using TrafficReporter.Common;
 using System.Net;
+using log4net;
 
 namespace TrafficReporter.WebAPI.Controllers
 {
@@ -22,8 +23,10 @@ namespace TrafficReporter.WebAPI.Controllers
     {
         private readonly IReportService _reportService;
         private readonly IMapper _mapper;
+        private static readonly ILog _log = LogManager.GetLogger(typeof(HomeController));
 
-        
+
+
         public HomeController(IReportService reportService, IMapper mapper)
         {
             _reportService = reportService;
@@ -58,6 +61,7 @@ namespace TrafficReporter.WebAPI.Controllers
         {
             if (ModelState.IsValid)
             {
+                _log.Info("App started");
                 //await _reportService.AddReportAsync(_mapper.Map<ReportViewModel, IReport>(viewModel));
                 return Index(null);
             }

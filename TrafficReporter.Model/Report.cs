@@ -6,6 +6,8 @@ namespace TrafficReporter.Model
 {
     public class Report : IReport
     {
+        
+
 
 
         /// <summary>
@@ -96,5 +98,6 @@ namespace TrafficReporter.Model
                 }
             }
         }
+
     }
 }
