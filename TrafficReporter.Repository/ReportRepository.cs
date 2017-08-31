@@ -22,7 +22,6 @@ namespace TrafficReporter.Repository
     /// </summary>
     public class ReportRepository : IReportRepository
     {
-        
         #region Constructors
 
         public ReportRepository()
@@ -44,7 +43,6 @@ namespace TrafficReporter.Repository
         {
             var rowsAffrected = 0;
 
-            
 
             using (var connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["RemoteDB"]
                 .ConnectionString))
@@ -53,16 +51,17 @@ namespace TrafficReporter.Repository
 
                 //This method should add only if other report in range and with same
                 //cause doesn't exist.
+                //todo move this logic upwards
                 var reportInRangeId = await CheckIfOtherReportInRangeAsync(report, connection);
                 if (!reportInRangeId.Equals(Guid.Empty))
                 {
                     int rowsAffected = await UpdateTimeAndRatingAsync(reportInRangeId, report.Cause, connection);
                     connection.Close();
-                    return (int)Inserted.Updated;
+                    return (int) Inserted.Updated;
                 }
 
                 #region AddReport
-                
+
                 using (var command = new NpgsqlCommand())
                 {
                     command.Connection = connection;
@@ -71,7 +70,7 @@ namespace TrafficReporter.Repository
                         "VALUES (@id, @cause, @direction, @longitude, @lattitude, @date_created)";
                     command.Parameters.AddWithValue("id", report.Id);
                     command.Parameters.AddWithValue("cause", report.Cause);
-                    command.Parameters.AddWithValue("direction", (int)report.Direction);
+                    command.Parameters.AddWithValue("direction", (int) report.Direction);
                     command.Parameters.AddWithValue("longitude", report.Longitude);
                     command.Parameters.AddWithValue("lattitude", report.Lattitude);
                     //todo do not use datetime.now here, get time from frontend
@@ -79,11 +78,13 @@ namespace TrafficReporter.Repository
                     rowsAffrected = await command.ExecuteNonQueryAsync();
                 }
                 await UpdateTimeAndRatingAsync(report.Id, report.Cause, connection);
+
                 #endregion AddReport
+
                 connection.Close();
             }
 
-            return (int)Inserted.Added;
+            return (int) Inserted.Added;
         }
 
         /// <summary>
@@ -96,8 +97,9 @@ namespace TrafficReporter.Repository
         {
             int rowsAffected = 0;
 
-            using (var command = new NpgsqlCommand($"UPDATE trafreport SET time_remaining = get_time({cause}), rating = rating + 1 " +
-                                                   $"WHERE id = '{reportInRangeId}'", connection))
+            using (var command = new NpgsqlCommand(
+                $"UPDATE trafreport SET time_remaining = (SELECT time_remaining FROM cause_table WHERE id = {cause}), rating = rating + 1 " +
+                $"WHERE id = '{reportInRangeId}'", connection))
             {
                 rowsAffected = await command.ExecuteNonQueryAsync();
             }
@@ -119,8 +121,10 @@ namespace TrafficReporter.Repository
 
             using (var command =
                 new NpgsqlCommand(
-                    "SELECT report_uuid FROM get_reports_with_same_cause_and_within_range" +
-                    $"({report.Longitude.ToString().Replace(',', '.')}, {report.Lattitude.ToString().Replace(',', '.')}, {report.Cause})",
+                    $"SELECT id\r\n" +
+                    $"FROM (SELECT id FROM trafreport\r\n" +
+                    $" WHERE cause = {report.Cause}" +
+                    $" AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id\r\n",
                     connection))
             {
                 using (var reader = await command.ExecuteReaderAsync())
@@ -129,14 +133,12 @@ namespace TrafficReporter.Repository
                     {
                         while (reader.Read())
                         {
-                            returnValue = (Guid)reader.GetDataSafely("report_uuid");
+                            returnValue = (Guid) reader.GetDataSafely("report_uuid");
                         }
-
                     }
-                    
+
                     reader.Close();
                 }
-                
             }
 
             return returnValue;
@@ -161,13 +163,13 @@ namespace TrafficReporter.Repository
                         {
                             report = new Report();
                             report.Id = id;
-                            report.Cause = (int)reader.GetDataSafely("cause");
-                            report.Rating = (int)reader.GetDataSafely("rating");
-                            report.Direction = (Direction)reader.GetDataSafely("direction");
-                            report.Longitude = (double)reader.GetDataSafely("longitude");
-                            report.Lattitude = (double)reader.GetDataSafely("lattitude");
-                            report.DateCreated = (DateTime)reader.GetDataSafely("date_created");
-                        } 
+                            report.Cause = (int) reader.GetDataSafely("cause");
+                            report.Rating = (int) reader.GetDataSafely("rating");
+                            report.Direction = (Direction) reader.GetDataSafely("direction");
+                            report.Longitude = (double) reader.GetDataSafely("longitude");
+                            report.Lattitude = (double) reader.GetDataSafely("lattitude");
+                            report.DateCreated = (DateTime) reader.GetDataSafely("date_created");
+                        }
                     }
                     reader.Close();
                 }
@@ -214,14 +216,13 @@ namespace TrafficReporter.Repository
                             commandText.Append($"cause & {filter.Cause} > 0 AND ");
                         }
 
-                        
+
                         commandText.Append($"longitude BETWEEN {filter.LowerLeftX} AND {filter.UpperRightX} AND ");
                         commandText.Append($"lattitude BETWEEN {filter.LowerLeftY} AND {filter.UpperRightY}");
 
                         commandText.Append($"");
 
                         commandText.Append($"LIMIT {filter.PageSize}");
-
                     }
                     command.CommandText = commandText.ToString().Replace(',', '.');
 
