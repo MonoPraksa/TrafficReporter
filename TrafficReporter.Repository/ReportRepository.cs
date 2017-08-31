@@ -194,6 +194,7 @@ namespace TrafficReporter.Repository
 
                 using (var command = new NpgsqlCommand())
                 {
+                    if (filter.Cause != 0){
                     command.Connection = connection;
                     var commandText = new StringBuilder("SELECT * FROM trafreport ");
 
@@ -205,13 +206,10 @@ namespace TrafficReporter.Repository
 
                         //This is filtering like here:
                         //https://timdams.com/2011/02/14/using-enum-flags-to-write-filters-in-linq/
-                        if (filter.Cause != 0)
-                        {
                             //I'm here adding AND  because coordinates must be specified or
                             //db could be outputting reports that might be out of the area
                             //of visible map.
                             commandText.Append($"cause & {filter.Cause} > 0 AND ");
-                        }
 
                         
                         commandText.Append($"longitude BETWEEN {filter.LowerLeftX} AND {filter.UpperRightX} AND ");
@@ -246,6 +244,7 @@ namespace TrafficReporter.Repository
             }
 
             return reports;
+            }
         }
 
         /// <summary>
