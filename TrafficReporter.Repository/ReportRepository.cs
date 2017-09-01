@@ -58,7 +58,7 @@ namespace TrafficReporter.Repository
             {
                 await connection.OpenAsync();
 
-                
+
 
                 #region AddReport
 
@@ -70,7 +70,7 @@ namespace TrafficReporter.Repository
                         "VALUES (@id, @cause, @direction, @longitude, @lattitude, @date_created)";
                     command.Parameters.AddWithValue("id", report.Id);
                     command.Parameters.AddWithValue("cause", report.Cause);
-                    command.Parameters.AddWithValue("direction", (int) report.Direction);
+                    command.Parameters.AddWithValue("direction", (int)report.Direction);
                     command.Parameters.AddWithValue("longitude", report.Longitude);
                     command.Parameters.AddWithValue("lattitude", report.Lattitude);
                     //todo do not use datetime.now here, get time from frontend
@@ -84,7 +84,7 @@ namespace TrafficReporter.Repository
                 connection.Close();
             }
 
-            return (int) Inserted.Added;
+            return (int)Inserted.Added;
         }
 
         public async Task<int> UpdateTimeAndRatingAsync(Guid reportInRangeId, int cause)
@@ -101,13 +101,13 @@ namespace TrafficReporter.Repository
                 {
                     rowsAffected = await command.ExecuteNonQueryAsync();
                 }
-                
-                connection.Close(); 
+
+                connection.Close();
             }
 
             return rowsAffected;
         }
-        
+
         public async Task<Guid> CheckIfOtherReportInRangeAsync(IReport report)
         {
             Guid returnValue = Guid.Empty;
@@ -136,7 +136,7 @@ namespace TrafficReporter.Repository
 
                         reader.Close();
                     }
-                } 
+                }
             }
 
             return returnValue;
@@ -150,7 +150,6 @@ namespace TrafficReporter.Repository
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-
                 using (var command = new NpgsqlCommand($"SELECT * FROM trafreport WHERE id = '{id}'", connection))
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -159,15 +158,15 @@ namespace TrafficReporter.Repository
                         while (reader.Read())
                         {
 
-                                report = new Report();
-                                report.Id = id;
-                                report.Cause = reader.GetDataSafely<int>("cause");
-                                report.Rating = reader.GetDataSafely<int>("rating");
-                                //report.Direction = reader.GetDataSafely<Direction>("direction");
-                                report.Longitude = reader.GetDataSafely<double>("longitude");
-                                report.Lattitude = reader.GetDataSafely<double>("lattitude");
-                                report.DateCreated = reader.GetDataSafely<DateTime>("date_created");
-                           
+                            report = new Report();
+                            report.Id = id;
+                            report.Cause = reader.GetDataSafely<int>("cause");
+                            report.Rating = reader.GetDataSafely<int>("rating");
+                            //report.Direction = reader.GetDataSafely<Direction>("direction");
+                            report.Longitude = reader.GetDataSafely<double>("longitude");
+                            report.Lattitude = reader.GetDataSafely<double>("lattitude");
+                            report.DateCreated = reader.GetDataSafely<DateTime>("date_created");
+
                         }
                     }
                     reader.Close();
@@ -188,7 +187,19 @@ namespace TrafficReporter.Repository
         public async Task<IEnumerable<IReport>> GetFilteredReportsAsync(IFilter filter)
         {
             List<IReport> reports = new List<IReport>();
+            ////////////////
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
 
+                using (var command = new NpgsqlCommand())
+                {
+                    command.Connection = connection;
+                    var commandText = new StringBuilder("delete from trafreport where date_created + time_remaining < NOW(); ");
+                }
+                connection.Close();
+            }
+            ///////////////
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
