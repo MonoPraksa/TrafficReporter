@@ -17,12 +17,20 @@ export class DirectionComponent implements OnInit{
     constructor(private elementRef: ElementRef,
         private communicationService: CommunicationService){
             this.directionsService = new google.maps.DirectionsService();
+
+            this.communicationService.bounds$.subscribe(
+                data=>{
+                    this.OriginInput.setBounds(data);     // usmjerava searchbox da nudi lokacije
+                    this.DestinationInput.setBounds(data);// bliže onima koje gledamo na mapi
+                }
+            )
     }
 
   origin: any;
   destination: any;
   location: any;
   useCurrentLocation: boolean;
+  directionsInUse: boolean = false;
 
     sendToMap(){   
         var self = this;
@@ -36,6 +44,7 @@ export class DirectionComponent implements OnInit{
             request.origin=this.location;
           this.directionsService.route(request, function(response, status) {
             if (status == 'OK') {
+                self.directionsInUse = true;
                 self.communicationService.sendDirections(response);
             }
           });
@@ -57,6 +66,13 @@ export class DirectionComponent implements OnInit{
             this.useCurrentLocation=true;
             navigator.geolocation.getCurrentPosition(this.setCurrentLocation.bind(this));
         }
+    }
+
+    clearRoute(){
+        this.communicationService.clearDirections(false);
+        this.communicationService.directionsStateHidden=true;
+        this.communicationService.activate(true);
+        this.directionsInUse=false;
     }
 
     setCurrentLocation(position){

@@ -16,8 +16,22 @@ export class CommunicationService {          // the point of communication servi
     this.directions.next(data);
   }
 
+  private clearRoute = new Subject<boolean>();
+  clearRoute$ = this.clearRoute.asObservable();
+  clearDirections(data: boolean){
+    this.clearRoute.next(data);
+  }
+
+  private bounds = new Subject<any>();
+  bounds$= this.bounds.asObservable();
+  setBounds(data: any){
+    this.bounds.next(data);
+  }
+
   public directionsStateHidden: boolean = true;
+  public directionsStateInUse: boolean = false;
   public menuStateHidden: boolean = true;
+  public geolocationDenied: boolean = false;
 
   private filter = new Subject<number>();
   filter$ = this.filter.asObservable();

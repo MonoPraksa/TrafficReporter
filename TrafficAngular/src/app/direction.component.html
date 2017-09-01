@@ -1,7 +1,9 @@
 <div [hidden]="communicationService.directionsStateHidden">
-<input placeholder="Starting point" [disabled]="useCurrentLocation"/> <img src="../assets/images/marker.png" title="Use current location" (click)="toggleCurrentLocation()"/>
+<input placeholder="Starting point" [disabled]="useCurrentLocation"/>
+ <img src="../assets/images/marker.png" title="Use current location" (click)="toggleCurrentLocation()" [hidden]="communicationService.geolocationDenied"/>
 <br>
 <input placeholder="Destination" /> 
 <br>
+<button (click)="clearRoute()" [disabled]="!directionsInUse"> Clear route </button>
 <button (click)="sendToMap()"> Find a way</button>
 </div> 

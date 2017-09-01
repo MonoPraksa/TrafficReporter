@@ -7,6 +7,7 @@ import { CausesService } from './causes.service';
 
 import { Report } from './report';
 import { Markers } from './marker';
+import { Rectangle} from './rectangle';
 
  
 @Component({
@@ -21,7 +22,9 @@ export class MapComponent implements OnInit {
   lng: number;        //  <-+ trenutne kordinate
   marker: Markers;    //  
   tracker: any;
-  navigationDisabled: boolean= false;  
+  navigationDisabled: boolean= false;
+  directionEnable: boolean;
+  directionBounds: Rectangle = new Rectangle;  
  public map:any;            //  za dohvaćanje google map instance
  public directionsDisplay: any;   // za prikazivanje rute
  public search: any;        //  za dohvaćanje google searchbox instance
@@ -39,6 +42,29 @@ export class MapComponent implements OnInit {
 
     this.communicationService.directions$.subscribe(
       data =>{
+      let myRoute = data.routes[0].legs[0];
+      this.directionBounds.greaterX=this.directionBounds.lesserX=myRoute.steps[0].start_location.lng();
+      this.directionBounds.greaterY=this.directionBounds.lesserY=myRoute.steps[0].start_location.lat();
+
+      for(let i=1;i<myRoute.steps.length;i++){
+        if(this.directionBounds.greaterX<myRoute.steps[i].start_location.lng())
+          this.directionBounds.greaterX=myRoute.steps[i].start_location.lng();
+        if(this.directionBounds.lesserX>myRoute.steps[i].start_location.lng())
+          this.directionBounds.lesserX=myRoute.steps[i].start_location.lng();
+        if(this.directionBounds.greaterY<myRoute.steps[i].start_location.lat())
+          this.directionBounds.greaterY=myRoute.steps[i].start_location.lat();
+        if(this.directionBounds.lesserY>myRoute.steps[i].start_location.lat())
+          this.directionBounds.lesserY=myRoute.steps[i].start_location.lat();
+        if(this.directionBounds.greaterX<myRoute.steps[i].end_location.lng())
+          this.directionBounds.greaterX=myRoute.steps[i].end_location.lng();
+        if(this.directionBounds.lesserX>myRoute.steps[i].end_location.lng())
+          this.directionBounds.lesserX=myRoute.steps[i].end_location.lng();
+        if(this.directionBounds.greaterY<myRoute.steps[i].end_location.lat())
+          this.directionBounds.greaterY=myRoute.steps[i].end_location.lat();
+        if(this.directionBounds.lesserY>myRoute.steps[i].end_location.lat())
+          this.directionBounds.lesserY=myRoute.steps[i].end_location.lat();
+      }
+      this.communicationService.directionsStateInUse=true;
       this.directionsDisplay.setDirections(data);
       }
     );
@@ -49,13 +75,20 @@ export class MapComponent implements OnInit {
       }
     );
 
+    this.communicationService.clearRoute$.subscribe(
+      data=>{
+        this.communicationService.directionsStateInUse=data;
+        this.directionsDisplay.set('directions',null);
+      }
+    )
+
 }
 
 
 initMap(position):void {
   /*let position = {coords:{latitude:46, longitude: 16}}; */
   if(position.code){
-    this.navigationDisabled=true;
+    this.communicationService.geolocationDenied=true;
     position.coords = {latitude:46, longitude: 16};
     alert("We could not get your location, which limits website functionality\n Reason: "+position.message);
     console.log(position.message);
@@ -81,21 +114,12 @@ initMap(position):void {
 
         this.marker = new Markers(this.causesService);
 
-        this.map.addListener('idle', function() {  // usmjerava searchbox da nudi lokacije bliže onima koje gledamo na mapi
-          let bounds = selfRef.map.getBounds();
-        //  selfRef.search.setBounds(bounds);
- 
-
-          selfRef.reportService.getReports(bounds.b.b, bounds.f.b, bounds.b.f, bounds.f.f, selfRef.filter)    // dohvati reportove 
-          .then(report => {                     // te obriši
-            selfRef.marker.empty();             // stare markere
-            report.forEach(function(rep) {      // i dodaj nove
-             selfRef.marker.create(selfRef.map,rep);
-            });
-            selfRef.marker.current(selfRef.map,selfRef);
-        });
+        this.map.addListener('idle', function() {  
+          selfRef.communicationService.setBounds(selfRef.map.getBounds());
+          selfRef.updateReports(selfRef);
       });
 
+      setInterval(this.updateReports,10000, this);
      /*   this.search.addListener('places_changed',function(){     // povezuje searchbox s mapom
            let places = selfRef.search.getPlaces();
 
@@ -128,7 +152,8 @@ initMap(position):void {
            // console.log(rep); 
            });
 
-      setInterval(this.updateReports,15000, this.map, this); */
+    */
+  //   
  }
 
 
@@ -164,8 +189,13 @@ menuToggle(){
 }
 
 updateReports(selfRef: any):void{
-   let a = selfRef.map.getBounds()
-   selfRef.reportService.getReports(a.b.b, a.f.b, a.b.f, a.f.f,selfRef.filter)    // dohvati reportove 
+  let bounds;
+  if(selfRef.communicationService.directionsStateInUse)
+    bounds = {b:{b:selfRef.directionBounds.lesserX-0.0005,f:selfRef.directionBounds.greaterX+0.0005},
+              f:{b:selfRef.directionBounds.lesserY-0.0005,f:selfRef.directionBounds.greaterY+0.0005}}
+  else 
+    bounds = selfRef.map.getBounds();
+   selfRef.reportService.getReports(bounds.b.b, bounds.f.b, bounds.b.f, bounds.f.f,selfRef.filter)    // dohvati reportove 
    .then(report => {                            // te obriši
      selfRef.marker.empty();                    // stare markere
      report.forEach(function(rep) {             // i dodaj nove
