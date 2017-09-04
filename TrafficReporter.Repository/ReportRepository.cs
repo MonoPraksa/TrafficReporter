@@ -195,7 +195,7 @@ namespace TrafficReporter.Repository
                 using (var command = new NpgsqlCommand())
                 {
                     command.Connection = connection;
-                    var commandText = new StringBuilder("delete from trafreport where date_created + time_remaining < NOW(); ");
+                    var commandText = new StringBuilder("delete from trafreport where date_created + time_remaining < now_utc(); ");
                 }
                 connection.Close();
             }
