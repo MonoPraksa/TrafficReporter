@@ -187,7 +187,6 @@ namespace TrafficReporter.Repository
         public async Task<IEnumerable<IReport>> GetFilteredReportsAsync(IFilter filter)
         {
             List<IReport> reports = new List<IReport>();
-            ////////////////
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -195,19 +194,7 @@ namespace TrafficReporter.Repository
                 using (var command = new NpgsqlCommand())
                 {
                     command.Connection = connection;
-                    var commandText = new StringBuilder("delete from trafreport where date_created + time_remaining < now_utc(); ");
-                }
-                connection.Close();
-            }
-            ///////////////
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-
-                using (var command = new NpgsqlCommand())
-                {
-                    command.Connection = connection;
-                    var commandText = new StringBuilder("SELECT * FROM trafreport ");
+                    var commandText = new StringBuilder("DELETE FROM trafreport WHERE date_created + time_remaining < NOW(); SELECT * FROM trafreport ");
 
                     //If there is at least one filter, then apply
                     //WHERE part of the SQL query.

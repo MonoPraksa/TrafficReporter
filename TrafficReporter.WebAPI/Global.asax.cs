@@ -22,7 +22,7 @@ namespace TrafficReporter.WebAPI
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             log4net.Config.XmlConfigurator.Configure();
             Hangfire.GlobalConfiguration.Configuration
-            .UsePostgreSqlStorage("Host=13.95.28.45; Port = 5432; Username='postgres'; Password=Ry7eVUOmMis8; Database=traffic_report_db");
+            .UsePostgreSqlStorage("Host=13.95.28.45; Port = 5432; Username='postgres'; Password='Ry7eVUOmMis8'; Database=traffic_report_db");
 
 
         }
