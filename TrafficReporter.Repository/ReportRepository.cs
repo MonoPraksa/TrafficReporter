@@ -66,8 +66,8 @@ namespace TrafficReporter.Repository
                 {
                     command.Connection = connection;
                     command.CommandText =
-                        "INSERT INTO trafreport (id, cause, direction, longitude, lattitude, date_created)" +
-                        "VALUES (@id, @cause, @direction, @longitude, @lattitude, @date_created)";
+                        "INSERT INTO trafreport (id, cause, direction, longitude, lattitude, date_created, time_remaining)" +
+                        "VALUES (@id, @cause, @direction, @longitude, @lattitude, @date_created, (select time_remaining from cause_table where id=@cause))";
                     command.Parameters.AddWithValue("id", report.Id);
                     command.Parameters.AddWithValue("cause", report.Cause);
                     command.Parameters.AddWithValue("direction", (int) report.Direction);
@@ -96,7 +96,7 @@ namespace TrafficReporter.Repository
                 await connection.OpenAsync();
 
                 using (var command = new NpgsqlCommand(
-                        $"UPDATE trafreport SET date created = NOW(), rating = rating + 1 " +
+                        $"UPDATE trafreport SET date_created = NOW(), rating = rating + 1 " +
                         $"WHERE id = '{reportInRangeId}'", connection))
                 {
                     rowsAffected = await command.ExecuteNonQueryAsync();
@@ -118,10 +118,9 @@ namespace TrafficReporter.Repository
 
                 using (var command =
                         new NpgsqlCommand(
-                            $"SELECT id\r\n" +
-                            $"FROM (SELECT id FROM trafreport\r\n" +
+                            $"SELECT id FROM trafreport\r\n" +
                             $" WHERE cause = {report.Cause}" +
-                            $" AND (date_created + time_remaining < NOW()) AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id\r\n",
+                            $" AND calculate_distance({report.Longitude.ToString().Replace(',','.')}, {report.Lattitude.ToString().Replace(',', '.')}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})",
                             connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -202,7 +201,7 @@ namespace TrafficReporter.Repository
                     //WHERE part of the SQL query.
                     if (filter != null)
                     {
-                        commandText.Append("WHERE date_created + time_remaining > NOW() AND ");
+                        commandText.Append("WHERE (date_created + time_remaining) > NOW() AND ");
 
                         //This is filtering like here:
                         //https://timdams.com/2011/02/14/using-enum-flags-to-write-filters-in-linq/
