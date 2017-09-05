@@ -96,7 +96,7 @@ namespace TrafficReporter.Repository
                 await connection.OpenAsync();
 
                 using (var command = new NpgsqlCommand(
-                        $"UPDATE trafreport SET time_remaining = (SELECT time_remaining FROM cause_table WHERE id = {cause}), rating = rating + 1 " +
+                        $"UPDATE trafreport SET date created = NOW(), rating = rating + 1 " +
                         $"WHERE id = '{reportInRangeId}'", connection))
                 {
                     rowsAffected = await command.ExecuteNonQueryAsync();
@@ -121,7 +121,7 @@ namespace TrafficReporter.Repository
                             $"SELECT id\r\n" +
                             $"FROM (SELECT id FROM trafreport\r\n" +
                             $" WHERE cause = {report.Cause}" +
-                            $" AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id\r\n",
+                            $" AND date_created + time_remaining > NOW() AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id\r\n",
                             connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -202,7 +202,7 @@ namespace TrafficReporter.Repository
                     //WHERE part of the SQL query.
                     if (filter != null)
                     {
-                        commandText.Append("WHERE ");
+                        commandText.Append("WHERE date_created + time_remaining > NOW() AND");
 
                         //This is filtering like here:
                         //https://timdams.com/2011/02/14/using-enum-flags-to-write-filters-in-linq/
