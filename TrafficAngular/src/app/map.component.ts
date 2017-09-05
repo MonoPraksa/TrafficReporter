@@ -22,6 +22,7 @@ export class MapComponent implements OnInit {
   marker: Markers;    //  <---- handles all markers representing different reports and current location
   tracker: any;       // timer used when tracking is enabled
   throttler: boolean = false;  // used to throttle request to api when route is set
+  throttlerTimer: any;// timer used postpone throttling for few seconds
   directionBounds: Rectangle[] = [];
   directionsFromGoogle: any;
  public map:any;            //  for google map instance handling
@@ -74,7 +75,8 @@ export class MapComponent implements OnInit {
       });
     //  console.log(selfRef.directionBounds);
     selfRef.throttler=false;
-      setTimeout(function(){selfRef.throttler=true;},5000);
+    clearTimeout(selfRef.throttlerTimer);
+      selfRef.throttlerTimer=setTimeout(function(){selfRef.throttler=true;},5000);
      
       this.communicationService.directionsStateInUse=true;
       this.directionsDisplay.setDirections(data);
@@ -89,6 +91,8 @@ export class MapComponent implements OnInit {
 
     this.communicationService.clearRoute$.subscribe(
       data=>{
+        clearTimeout(selfRef.throttlerTimer);
+        selfRef.throttler=false;
         this.communicationService.directionsStateInUse=data;
         this.directionsDisplay.set('directions',null);
       }
@@ -102,7 +106,7 @@ initMap(position):void {
     this.communicationService.geolocationDenied=true;
     position.coords = {latitude:46, longitude: 16};
     alert("We could not get your location, which limits website functionality\n Reason: "+position.message);
-    console.log(position.message);
+   // console.log(position.message);
   }
  
   let selfRef = this;     
@@ -167,8 +171,8 @@ menuToggle(){
 }
 
 updateReports(selfRef: any, timerCalled: boolean):void{
- //console.log("!tracker "+!selfRef.tracker+";\nthrotller "+selfRef.throttler+";\n!timerCalled "+!timerCalled);
-  if(!selfRef.tracker && selfRef.throttler && !timerCalled){
+ console.log("!tracker "+!selfRef.tracker+";\nthrotller "+selfRef.throttler+";\n!timerCalled "+!timerCalled);
+  if(!selfRef.tracker && selfRef.throttler && !timerCalled || !selfRef.map.getBounds){
     return;
   }
 
