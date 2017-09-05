@@ -202,7 +202,7 @@ namespace TrafficReporter.Repository
                     //WHERE part of the SQL query.
                     if (filter != null)
                     {
-                        commandText.Append("WHERE date_created + time_remaining > NOW() AND");
+                        commandText.Append("WHERE date_created + time_remaining > NOW() AND ");
 
                         //This is filtering like here:
                         //https://timdams.com/2011/02/14/using-enum-flags-to-write-filters-in-linq/
