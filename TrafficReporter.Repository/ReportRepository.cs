@@ -121,7 +121,7 @@ namespace TrafficReporter.Repository
                             $"SELECT id\r\n" +
                             $"FROM (SELECT id FROM trafreport\r\n" +
                             $" WHERE cause = {report.Cause}" +
-                            $" AND date_created + time_remaining >  NOW() AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id\r\n",
+                            $" AND (date_created + time_remaining < NOW()) AND calculate_distance({report.Longitude}, {report.Lattitude}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})) AS id\r\n",
                             connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
