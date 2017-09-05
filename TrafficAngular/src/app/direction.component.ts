@@ -20,8 +20,8 @@ export class DirectionComponent implements OnInit{
 
             this.communicationService.bounds$.subscribe(
                 data=>{
-                    this.OriginInput.setBounds(data);     // usmjerava searchbox da nudi lokacije
-                    this.DestinationInput.setBounds(data);// bliže onima koje gledamo na mapi
+                    this.OriginInput.setBounds(data);     // makes searchbox offer locations 
+                    this.DestinationInput.setBounds(data);// nearer to those found on map
                 }
             )
     }
@@ -52,10 +52,10 @@ export class DirectionComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this.origin = this.elementRef.nativeElement.children[0].children[0];
-        this.destination = this.elementRef.nativeElement.children[0].children[3];
-        this.OriginInput = new google.maps.places.SearchBox(this.origin);
-        this.DestinationInput = new google.maps.places.SearchBox(this.destination);
+        this.origin = this.elementRef.nativeElement.children[0].children[0];                //  get input elements 
+        this.destination = this.elementRef.nativeElement.children[0].children[3];           // 
+        this.OriginInput = new google.maps.places.SearchBox(this.origin);                   //  and give them to Google
+        this.DestinationInput = new google.maps.places.SearchBox(this.destination);         //  so he can add autocomplete features
         }
 
     toggleCurrentLocation(){
@@ -69,14 +69,14 @@ export class DirectionComponent implements OnInit{
     }
 
     clearRoute(){
-        this.communicationService.clearDirections(false);
-        this.communicationService.directionsStateHidden=true;
-        this.communicationService.activate(true);
-        this.directionsInUse=false;
+        this.communicationService.clearDirections(false);       // clear displayed route
+        this.communicationService.directionsStateHidden=true;   // close directions window
+        this.communicationService.activate(true);               // refresh the map
+        this.directionsInUse=false;                             // disable button for clearing route
     }
 
     setCurrentLocation(position){
-        this.location={lat: position.coords.latitude, lng:position.coords.longitude};
+        this.location={lat: position.coords.latitude, lng:position.coords.longitude};   // convert current location to google location object
     }
 }
 
