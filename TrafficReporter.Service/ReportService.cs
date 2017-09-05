@@ -102,7 +102,7 @@ namespace TrafficReporter.Service
 
 
 
-        /// <summary>
+        /// <summary> 
         /// Gets the filtered reports asynchronous.
         /// </summary>
         /// <param name="filter">The filter.</param>
