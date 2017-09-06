@@ -15,6 +15,7 @@ using TrafficReporter.Common.Enums;
 using TrafficReporter.Common.Filter;
 using TrafficReporter.DAL.Entity_Models;
 
+
 namespace TrafficReporter.Repository
 {
     /// <summary>
@@ -237,13 +238,67 @@ namespace TrafficReporter.Repository
                             report.DateCreated = reader.GetDataSafely<DateTime>("date_created");
                             reports.Add(report);
                         }
-
                         reader.Close();
                     }
                 }
                 connection.Close();
             }
 
+            return reports;
+        }
+
+
+        public async Task<IEnumerable<IReport>> GetPathFilter(IPathFilters filter)
+        {
+            List<IReport> reports = new List<IReport>();
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new NpgsqlCommand())
+                {
+                    command.Connection = connection;
+                    var commandText = new StringBuilder("SELECT * FROM trafreport ");
+                    //If there is at least one filter, then apply
+                    //WHERE part of the SQL query.
+                    if (filter != null)
+                    {
+                        commandText.Append("WHERE (date_created + time_remaining) > NOW() AND ");
+
+                        //This is filtering like here:
+                        //https://timdams.com/2011/02/14/using-enum-flags-to-write-filters-in-linq/
+                        if (filter.Cause != 0)
+                        {
+                            //I'm here adding AND  because coordinates must be specified or
+                            //db could be outputting reports that might be out of the area
+                            //of visible map.
+                            commandText.Append($"cause & {filter.Cause} > 0 AND ");
+                        }
+                        commandText.Append($"(SQUARE(longitude - {filter.Longitude}) + SQUARE(lattitude - {filter.Latitude})) < 0.001 ");
+
+                        commandText.Append($"");
+
+                        commandText.Append($"LIMIT {filter.PageSize}");
+                    }
+                    command.CommandText = commandText.ToString().Replace(',', '.');
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            var report = new Report();
+                            report.Id = reader.GetDataSafely<Guid>("id");
+                            report.Cause = reader.GetDataSafely<int>("cause");
+                            report.Rating = reader.GetDataSafely<int>("rating");
+                            report.Longitude = reader.GetDataSafely<double>("longitude");
+                            report.Lattitude = reader.GetDataSafely<double>("lattitude");
+                            report.DateCreated = reader.GetDataSafely<DateTime>("date_created");
+                            reports.Add(report);
+                        }
+                        reader.Close();
+                    }
+                }
+                connection.Close();
+            }
             return reports;
         }
 

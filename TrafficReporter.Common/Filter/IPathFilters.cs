@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace TrafficReporter.Common.Filter
 {
-    public interface IFilter : IPageFilter
+    public interface IPathFilters : IPageFilter
     {
-        double LowerLeftX { get; set; }
-        double LowerLeftY { get; set; }
-        double UpperRightX { get; set; }
-        double UpperRightY { get; set; }
+        double Longitude { get; set; }
+        double Latitude { get; set; }
         int Cause { get; set; }
     }
 }
