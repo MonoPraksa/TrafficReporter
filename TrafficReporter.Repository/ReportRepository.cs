@@ -15,6 +15,7 @@ using TrafficReporter.Common.Enums;
 using TrafficReporter.Common.Filter;
 using TrafficReporter.DAL.Entity_Models;
 
+
 namespace TrafficReporter.Repository
 {
     /// <summary>
@@ -247,7 +248,7 @@ namespace TrafficReporter.Repository
         }
 
 
-        public async Task<IEnumerable<IReport>> GetPathReportsAsync(IPathFilter filter)
+        public async Task<IEnumerable<IReport>> GetPathFilter(IPathFilters filter)
         {
             List<IReport> reports = new List<IReport>();
             using (var connection = new NpgsqlConnection(_connectionString))

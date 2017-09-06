@@ -41,6 +41,10 @@ namespace TrafficReporter.Service.Common
         /// <returns></returns>
         Task<IEnumerable<IReport>> GetFilteredReportsAsync(IFilter filter=null);
 
+
+
+        Task<IEnumerable<IReport>> GetPathFilter(IPathFilters filter = null);
+
         
     }
 }
