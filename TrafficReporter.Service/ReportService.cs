@@ -102,7 +102,7 @@ namespace TrafficReporter.Service
 
 
 
-        /// <summary> 
+        /// <summary>
         /// Gets the filtered reports asynchronous.
         /// </summary>
         /// <param name="filter">The filter.</param>
@@ -111,6 +111,17 @@ namespace TrafficReporter.Service
         {
             
             return _repository.GetFilteredReportsAsync(filter);
+        }
+
+        /// <summary>
+        /// Gets the filtered reports asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns></returns>
+        public Task<IEnumerable<IReport>> GetPathReportsAsync(IPathFilter filter=null)
+        {
+            
+            return _repository.GetPathReportsAsync(filter);
         }
 
         

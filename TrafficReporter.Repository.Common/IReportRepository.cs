@@ -49,6 +49,14 @@ namespace TrafficReporter.Repository.Common
         Task<IEnumerable<IReport>> GetFilteredReportsAsync(IFilter filter);
 
         /// <summary>
+        /// Gets all reports from database which satisfy passed filter.
+        /// </summary>
+        /// <param name="causeFilter">Filter which report has to satisfy in order to be retrieved. Related to cause.</param>
+        /// <param name="areaFilter"></param>
+        /// <returns>Collection of reports that satisfy filters.</returns>
+        Task<IEnumerable<IReport>> GetPathReportsAsync(IFilter filter);
+
+        /// <summary>
         /// Removes the report from database by passing Id parameter.
         /// </summary>
         /// <param name="Id">The identifier.</param>

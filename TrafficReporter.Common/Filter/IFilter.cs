@@ -14,7 +14,5 @@ namespace TrafficReporter.Common.Filter
         double UpperRightX { get; set; }
         double UpperRightY { get; set; }
         int Cause { get; set; }
-        
-
     }
 }
