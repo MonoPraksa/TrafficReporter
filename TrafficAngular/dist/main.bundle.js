@@ -213,12 +213,6 @@ var CausesComponent = (function () {
         report.Longitude = position.coords.longitude;
         report.DateCreated = new Date().toUTCString();
         //console.log(report);
-        this.problemService.createReport(report)
-            .then(function (data) {
-            if (data == 0) {
-                alert('We found matching report nearby and updated his rating.');
-            }
-        });
         this.communicationService.activate(true);
     };
     return CausesComponent;
