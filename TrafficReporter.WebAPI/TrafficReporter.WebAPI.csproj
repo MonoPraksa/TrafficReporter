@@ -187,9 +187,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="angular\dist\out-tsc\e2e\" />
-    <Folder Include="angular\dist\out-tsc\src\app\" />
-    <Folder Include="angular\dist\out-tsc\src\environments\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
@@ -239,49 +236,6 @@
     <Compile Include="ViewModels\ReportViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="angular\dist\assets\images\1.png" />
-    <Content Include="angular\dist\assets\images\16.png" />
-    <Content Include="angular\dist\assets\images\2.png" />
-    <Content Include="angular\dist\assets\images\32.png" />
-    <Content Include="angular\dist\assets\images\4.png" />
-    <Content Include="angular\dist\assets\images\8.png" />
-    <Content Include="angular\dist\assets\images\marker.png" />
-    <Content Include="angular\dist\assets\images\menu160.png" />
-    <Content Include="angular\dist\assets\images\settings160.png" />
-    <Content Include="angular\dist\favicon.ico" />
-    <Content Include="angular\dist\index.html" />
-    <Content Include="angular\dist\inline.bundle.js" />
-    <Content Include="angular\dist\main.bundle.js" />
-    <Content Include="angular\dist\polyfills.bundle.js" />
-    <Content Include="angular\dist\styles.bundle.js" />
-    <Content Include="angular\dist\vendor.bundle.js" />
-    <Content Include="angular\karma.conf.js" />
-    <Content Include="angular\protractor.conf.js" />
-    <Content Include="angular\src\1.png" />
-    <Content Include="angular\src\app\app.component.css" />
-    <Content Include="angular\src\app\app.component.html" />
-    <Content Include="angular\src\app\causes.component.css" />
-    <Content Include="angular\src\app\causes.component.html" />
-    <Content Include="angular\src\app\direction.component.css" />
-    <Content Include="angular\src\app\direction.component.html" />
-    <Content Include="angular\src\app\map.component.css" />
-    <Content Include="angular\src\app\map.component.html" />
-    <Content Include="angular\src\app\menu.component.css" />
-    <Content Include="angular\src\app\menu.component.html" />
-    <Content Include="angular\src\assets\images\1.png" />
-    <Content Include="angular\src\assets\images\16.png" />
-    <Content Include="angular\src\assets\images\2.png" />
-    <Content Include="angular\src\assets\images\32.png" />
-    <Content Include="angular\src\assets\images\4.png" />
-    <Content Include="angular\src\assets\images\8.png" />
-    <Content Include="angular\src\assets\images\marker.png" />
-    <Content Include="angular\src\assets\images\menu160.png" />
-    <Content Include="angular\src\assets\images\settings160.png" />
-    <Content Include="angular\src\favicon.ico" />
-    <Content Include="angular\src\favicon2.ico" />
-    <Content Include="angular\src\index.html" />
-    <Content Include="angular\src\styles.css" />
-    <Content Include="angular\src\systemjs.config.js" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -314,29 +268,62 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="angular\.angular-cli.json" />
-    <Content Include="angular\.editorconfig" />
-    <Content Include="angular\dist\inline.bundle.js.map" />
-    <Content Include="angular\dist\main.bundle.js.map" />
-    <Content Include="angular\dist\polyfills.bundle.js.map" />
-    <Content Include="angular\dist\styles.bundle.js.map" />
-    <Content Include="angular\dist\vendor.bundle.js.map" />
-    <Content Include="angular\e2e\tsconfig.e2e.json" />
-    <Content Include="angular\npm-debug.log.1333430610" />
-    <Content Include="angular\package-lock.json" />
-    <Content Include="angular\package.json" />
-    <Content Include="angular\README.md" />
-    <Content Include="angular\src\assets\.gitkeep" />
-    <Content Include="angular\src\tsconfig.app.json" />
-    <Content Include="angular\src\tsconfig.spec.json" />
-    <Content Include="angular\tsconfig.json" />
-    <Content Include="angular\tslint.json" />
+    <Content Include="package.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="src\1.png" />
+    <Content Include="src\app\api.service.js" />
+    <Content Include="src\app\app.component.css" />
+    <Content Include="src\app\app.component.html" />
+    <Content Include="src\app\app.component.js" />
+    <Content Include="src\app\app.component.js.map" />
+    <Content Include="src\app\app.component.spec.js" />
+    <Content Include="src\app\app.component.spec.js.map" />
+    <Content Include="src\app\app.module.js" />
+    <Content Include="src\app\app.module.js.map" />
+    <Content Include="src\app\causes.component.css" />
+    <Content Include="src\app\causes.component.html" />
+    <Content Include="src\app\causes.component.js" />
+    <Content Include="src\app\causes.js" />
+    <Content Include="src\app\causes.service.js" />
+    <Content Include="src\app\communication.service.js" />
+    <Content Include="src\app\custom.area.js" />
+    <Content Include="src\app\direction.component.css" />
+    <Content Include="src\app\direction.component.html" />
+    <Content Include="src\app\direction.component.js" />
+    <Content Include="src\app\filter.model.js" />
+    <Content Include="src\app\map.component.css" />
+    <Content Include="src\app\map.component.html" />
+    <Content Include="src\app\map.component.js" />
+    <Content Include="src\app\marker.js" />
+    <Content Include="src\app\menu.component.css" />
+    <Content Include="src\app\menu.component.html" />
+    <Content Include="src\app\menu.component.js" />
+    <Content Include="src\app\rectangle.js" />
+    <Content Include="src\app\report.js" />
+    <Content Include="src\app\report.service.js" />
+    <Content Include="src\assets\images\1.png" />
+    <Content Include="src\assets\images\16.png" />
+    <Content Include="src\assets\images\2.png" />
+    <Content Include="src\assets\images\32.png" />
+    <Content Include="src\assets\images\4.png" />
+    <Content Include="src\assets\images\8.png" />
+    <Content Include="src\assets\images\marker.png" />
+    <Content Include="src\assets\images\menu160.png" />
+    <Content Include="src\assets\images\settings160.png" />
+    <Content Include="src\favicon.ico" />
+    <Content Include="src\favicon2.ico" />
+    <Content Include="src\index.html" />
+    <Content Include="src\main.js" />
+    <Content Include="src\styles.css" />
+    <Content Include="src\systemjs-angular-loader.js" />
+    <Content Include="src\systemjs.config.extras.js" />
+    <Content Include="src\systemjs.config.js" />
+    <Content Include="src\tsconfig.json" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -353,6 +340,24 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Create.cshtml" />
+    <Content Include="src\assets\.gitkeep" />
+    <Content Include="src\main.js.map" />
+    <Content Include="src\tsconfig.app.json" />
+    <Content Include="src\tsconfig.spec.json" />
+    <Content Include="src\app\api.service.js.map" />
+    <Content Include="src\app\causes.component.js.map" />
+    <Content Include="src\app\causes.js.map" />
+    <Content Include="src\app\causes.service.js.map" />
+    <Content Include="src\app\communication.service.js.map" />
+    <Content Include="src\app\custom.area.js.map" />
+    <Content Include="src\app\direction.component.js.map" />
+    <Content Include="src\app\filter.model.js.map" />
+    <Content Include="src\app\map.component.js.map" />
+    <Content Include="src\app\marker.js.map" />
+    <Content Include="src\app\menu.component.js.map" />
+    <Content Include="src\app\rectangle.js.map" />
+    <Content Include="src\app\report.js.map" />
+    <Content Include="src\app\report.service.js.map" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrafficReporter.Common\TrafficReporter.Common.csproj">
@@ -389,34 +394,32 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="angular\e2e\app.e2e-spec.ts" />
-    <TypeScriptCompile Include="angular\e2e\app.po.ts" />
-    <TypeScriptCompile Include="angular\src\app\api.service.ts" />
-    <TypeScriptCompile Include="angular\src\app\app.component.spec.ts" />
-    <TypeScriptCompile Include="angular\src\app\app.component.ts" />
-    <TypeScriptCompile Include="angular\src\app\app.module.ts" />
-    <TypeScriptCompile Include="angular\src\app\causes.component.ts" />
-    <TypeScriptCompile Include="angular\src\app\causes.service.ts" />
-    <TypeScriptCompile Include="angular\src\app\causes.ts" />
-    <TypeScriptCompile Include="angular\src\app\communication.service.ts" />
-    <TypeScriptCompile Include="angular\src\app\custom.area.ts" />
-    <TypeScriptCompile Include="angular\src\app\direction.component.ts" />
-    <TypeScriptCompile Include="angular\src\app\filter.model.ts" />
-    <TypeScriptCompile Include="angular\src\app\map.component.ts" />
-    <TypeScriptCompile Include="angular\src\app\marker.ts" />
-    <TypeScriptCompile Include="angular\src\app\menu.component.ts" />
-    <TypeScriptCompile Include="angular\src\app\rectangle.ts" />
-    <TypeScriptCompile Include="angular\src\app\report.service.ts" />
-    <TypeScriptCompile Include="angular\src\app\report.ts" />
-    <TypeScriptCompile Include="angular\src\environments\environment.prod.ts" />
-    <TypeScriptCompile Include="angular\src\environments\environment.ts" />
-    <TypeScriptCompile Include="angular\src\main.ts" />
-    <TypeScriptCompile Include="angular\src\polyfills.ts" />
-    <TypeScriptCompile Include="angular\src\test.ts" />
-    <TypeScriptCompile Include="angular\src\typings.d.ts" />
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <TypeScriptCompile Include="src\app\api.service.ts" />
+    <TypeScriptCompile Include="src\app\app.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\app.component.ts" />
+    <TypeScriptCompile Include="src\app\app.module.ts" />
+    <TypeScriptCompile Include="src\app\causes.component.ts" />
+    <TypeScriptCompile Include="src\app\causes.service.ts" />
+    <TypeScriptCompile Include="src\app\causes.ts" />
+    <TypeScriptCompile Include="src\app\communication.service.ts" />
+    <TypeScriptCompile Include="src\app\custom.area.ts" />
+    <TypeScriptCompile Include="src\app\direction.component.ts" />
+    <TypeScriptCompile Include="src\app\filter.model.ts" />
+    <TypeScriptCompile Include="src\app\map.component.ts" />
+    <TypeScriptCompile Include="src\app\marker.ts" />
+    <TypeScriptCompile Include="src\app\menu.component.ts" />
+    <TypeScriptCompile Include="src\app\rectangle.ts" />
+    <TypeScriptCompile Include="src\app\report.service.ts" />
+    <TypeScriptCompile Include="src\app\report.ts" />
+    <TypeScriptCompile Include="src\environments\environment.prod.ts" />
+    <TypeScriptCompile Include="src\environments\environment.ts" />
+    <TypeScriptCompile Include="src\main.ts" />
+    <TypeScriptCompile Include="src\polyfills.ts" />
+    <TypeScriptCompile Include="src\test.ts" />
+    <TypeScriptCompile Include="src\typings.d.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

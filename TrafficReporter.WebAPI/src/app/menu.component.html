@@ -1,0 +1,9 @@
+<div [hidden]="communicationService.menuStateHidden">
+     Choose reports you want to display on map 
+      <label *ngFor="let model of filterModel">
+            <input type="checkbox" [(ngModel)]="model.selected" value="{{model.id}}"> {{model.name}}
+      </label> 
+
+<!-- <button (click)="goBack()">Back</button> -->
+<button (click)="apply()">Apply</button>
+</div> 
