@@ -210,9 +210,10 @@ var CausesComponent = (function () {
         var report = new __WEBPACK_IMPORTED_MODULE_1__report__["a" /* Report */];
         report.Cause = this.currentCause;
         report.Lattitude = position.coords.latitude;
-        report.Longitude = position.coords.longitude; 
+        report.Longitude = position.coords.longitude;
         report.DateCreated = new Date().toUTCString();
         //console.log(report);
+        this.problemService.createReport(report);
         this.communicationService.activate(true);
     };
     return CausesComponent;
