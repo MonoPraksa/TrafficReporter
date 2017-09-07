@@ -41,5 +41,6 @@ onSelect(cause: number){
    //console.log(report);
     this.problemService.createReport(report);
     this.communicationService.activate(true);
+    
   }
 }

@@ -40,6 +40,7 @@ onSelect(cause: number){
    report.DateCreated= new Date().toUTCString();
    //console.log(report);
     this.problemService.createReport(report);
+    
     this.communicationService.activate(true);
   }
 }
