@@ -215,7 +215,7 @@ updateReports(selfRef: any, timerCalled: boolean):void{
     ngOnInit(): void {
         if(navigator.geolocation){
             navigator.geolocation.getCurrentPosition(this.initMap.bind(this),this.initMap.bind(this));
-        }
+        } 
         else{
           let position = {coords:{latitude:46, longitude: 16}};
           this.initMap.bind(position);

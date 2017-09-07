@@ -39,6 +39,6 @@ onSelect(cause: number){
    report.Longitude=position.coords.longitude;
    report.DateCreated= new Date().toUTCString();
    //console.log(report);
-    this.communicationService.activate(true);
+   this.communicationService.activate(true);
   }
 }
