@@ -121,7 +121,7 @@ namespace TrafficReporter.Repository
                         new NpgsqlCommand(
                             $"SELECT id FROM trafreport\r\n" +
                             $" WHERE cause = {report.Cause}" +
-                            $" AND calculate_distance({report.Longitude.ToString().Replace(',','.')}, {report.Lattitude.ToString().Replace(',', '.')}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})",
+                            $" AND (date_created + time_remaining) > NOW() AND calculate_distance({report.Longitude.ToString().Replace(',','.')}, {report.Lattitude.ToString().Replace(',', '.')}, longitude, lattitude)  < (SELECT cause_range FROM cause_table WHERE id = {report.Cause})",
                             connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
